@@ -1,40 +1,38 @@
-# Renuka Prasad Patwari - Portfolio Website
+# Renuka Prasad Patwari — Portfolio
 
-A modern, responsive portfolio website showcasing my work as a Software Engineer & ML Enthusiast.
+A single-page React portfolio with scroll-snap section navigation, built with Vite, TypeScript, Tailwind CSS, and Framer Motion. Designs originated in Google Stitch and were converted into React components while preserving each section's original micro-interactions.
 
-## Quick Start
+## Stack
 
-### View Locally
-Simply open `index.html` in your browser:
+- React + TypeScript + Vite
+- Tailwind CSS v4
+- Framer Motion (entrance animations)
+- canvas-confetti (Hackathons section)
+
+## Structure
+
+```
+src/
+├── sections/     # One component per full-viewport section (Home, Experience, Projects, ...)
+├── components/   # Shared pieces (TopNav, ProgressRail, WaveHeading, ...)
+├── data/         # Content for each section
+├── hooks/        # useActiveSection, useDebouncedConfetti
+└── index.css     # Tailwind entry + design tokens + ported micro-interaction CSS
+```
+
+## Develop
+
 ```bash
-open index.html
+npm install
+npm run dev
 ```
 
-Or use a local server:
+## Build
+
 ```bash
-# Using Python
-python -m http.server 8000
-
-# Using Node.js
-npx serve
-```
-Then visit `http://localhost:8000`
-
-## Project Structure
-
-```
-Portfolio/
-├── index.html          # Main HTML file
-├── styles.css          # All styling
-├── script.js           # Interactive features
-└── README.md           # This file
+npm run build
 ```
 
-## Features
+## Backend
 
-- **Responsive Design** - Works on all devices
-- **Dark Theme** - Modern, professional look
-- **Smooth Animations** - Scroll reveal effects
-- **Mobile Navigation** - Hamburger menu
-- **SEO Optimized** - Meta tags included
-- **Social Sharing** - Open Graph support
+The `backend/` directory contains a separate Flask service, unrelated to this frontend rebuild.
