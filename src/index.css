@@ -92,25 +92,17 @@ body {
   color: #6b38d4;
 }
 
-.highlight-text-container {
-  position: relative;
-  display: inline-block;
-  transition: color 0.3s ease;
+.marker-reveal {
+  background-image: linear-gradient(rgba(166, 242, 207, 0.55), rgba(166, 242, 207, 0.55));
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  background-position: 0 0;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  transition: background-size 0.9s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.highlight-text-container::before {
-  content: '';
-  position: absolute;
-  bottom: 2px;
-  left: 0;
-  width: 0%;
-  height: 30%;
-  background-color: rgba(166, 242, 207, 0.5);
-  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: -1;
-  border-radius: 4px;
-}
-.highlight-text-container:hover::before {
-  width: 100%;
+.marker-reveal.is-revealed {
+  background-size: 100% 100%;
 }
 
 .stat-block {
