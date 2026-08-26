@@ -1,96 +1,189 @@
-import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import WaveHeading from '../components/WaveHeading'
 import { useDebouncedConfetti } from '../hooks/useDebouncedConfetti'
-import { HACKATHONS, type HackathonEntry } from '../data/hackathons'
+import { HACKATHONS, type HackathonEntry, type HackathonSize } from '../data/hackathons'
 
-function HackathonCard({ entry, index }: { entry: HackathonEntry; index: number }) {
+const SIZE_CLASSES: Record<HackathonSize, string> = {
+  large: 'md:col-span-2 md:row-span-2',
+  wideTop: 'md:col-span-2 md:row-span-1',
+  square: 'md:col-span-1 md:row-span-1',
+  wideBottom: 'md:col-span-3 md:row-span-1',
+}
+
+function HackathonTile({
+  entry,
+  index,
+  onOpen,
+}: {
+  entry: HackathonEntry
+  index: number
+  onOpen: () => void
+}) {
   const { cardRef, onHoverStart } = useDebouncedConfetti()
-  const reverse = index % 2 === 1
-  const isFeatured = index === 0
+  const isCompact = entry.size === 'square'
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
-      className="relative z-10"
+      transition={{ duration: 0.6, delay: index * 0.08 }}
+      className={`${SIZE_CLASSES[entry.size]} relative`}
     >
-      <div
-        ref={cardRef}
+      <button
+        ref={cardRef as never}
+        type="button"
         onMouseEnter={entry.confetti ? onHoverStart : undefined}
-        className={`rounded-xl flex flex-col ${reverse ? 'md:flex-row-reverse' : 'md:flex-row'} shadow-sm hover-pop overflow-hidden border ${
-          isFeatured
-            ? 'bg-primary text-on-primary border-transparent shadow-ambient-primary'
-            : 'bg-surface-container-lowest border-surface-variant'
-        }`}
+        onClick={onOpen}
+        className="group relative flex h-full min-h-[220px] w-full flex-col overflow-hidden rounded-xl border border-surface-variant bg-surface-container-lowest text-left shadow-sm grayscale transition-all duration-400 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:grayscale-0 hover:shadow-2xl hover:z-10"
       >
-        <div
-          className={`md:w-1/2 relative p-8 flex items-center justify-center min-h-[220px] ${
-            isFeatured ? 'bg-primary-container' : 'bg-surface-container'
-          }`}
-        >
-          <span
-            className={`material-symbols-outlined text-[72px] ${isFeatured ? 'text-on-primary/60' : 'text-primary/30'}`}
-          >
-            emoji_events
-          </span>
-        </div>
-        <div className="md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
-          {entry.badge && (
+        {entry.image ? (
+          <img
+            src={entry.image}
+            alt={`${entry.title} photo`}
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-primary-container/25 via-transparent to-transparent">
             <span
-              className={`inline-block self-start px-3 py-1 text-label-sm font-label-sm rounded-full mb-3 shadow-sm ${
-                isFeatured ? 'bg-tertiary text-on-tertiary' : 'bg-tertiary-fixed text-on-tertiary-fixed-variant'
-              }`}
+              style={{ fontSize: isCompact ? 90 : 160 }}
+              className="material-symbols-outlined absolute -top-4 -right-4 text-primary/35 transition-colors duration-500 group-hover:text-primary/50"
             >
+              {entry.icon ?? 'emoji_events'}
+            </span>
+          </div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+
+        <div className="relative z-10 flex h-full flex-col justify-end p-6 md:p-8">
+          {entry.showBadgeOnCard && entry.badge && (
+            <span className="mb-3 inline-block self-start rounded-full bg-tertiary-fixed px-3 py-1 text-label-sm font-label-sm text-on-tertiary-fixed-variant shadow-sm">
               {entry.badge}
             </span>
           )}
-          <h3 className={`text-headline-md font-headline-md mb-1 ${isFeatured ? 'text-on-primary' : 'text-primary'}`}>
+          <h3
+            className={`font-headline-md text-white ${
+              isCompact ? 'text-headline-sm font-headline-sm' : 'text-headline-md'
+            }`}
+          >
             {entry.title}
           </h3>
-          {entry.subtitle && (
-            <p className={`text-label-bold font-label-bold mb-2 ${isFeatured ? 'text-tertiary-fixed' : 'text-secondary'}`}>
-              {entry.subtitle}
-            </p>
-          )}
-          <p className={`text-label-bold font-label-bold mb-4 ${isFeatured ? 'text-primary-fixed-dim' : 'text-outline'}`}>
-            {entry.date}
-          </p>
-          <p className={`text-body-md font-body-md mb-6 ${isFeatured ? 'text-on-primary-container opacity-90' : 'text-on-surface-variant'}`}>
-            {entry.description}
-          </p>
-          <div className="flex flex-wrap gap-2 mb-2">
-            {entry.tags.map((tag) => (
-              <span
-                key={tag}
-                className={`px-3 py-1 rounded-md text-label-sm font-label-sm ${
-                  isFeatured ? 'bg-on-primary text-primary font-bold' : 'bg-surface-container-high text-on-surface-variant'
-                }`}
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-          {entry.link && (
-            <a
-              className={`inline-flex items-center gap-2 font-label-bold text-label-sm hover:underline mt-4 ${
-                isFeatured ? 'text-on-primary' : 'text-primary'
-              }`}
-              href={entry.link}
-              target="_blank"
-              rel="noreferrer"
-            >
-              View Project <span className="material-symbols-outlined text-[16px]">arrow_outward</span>
-            </a>
-          )}
         </div>
-      </div>
+      </button>
+    </motion.div>
+  )
+}
+
+function HackathonModal({ entry, onClose }: { entry: HackathonEntry; onClose: () => void }) {
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    document.addEventListener('keydown', onKeyDown)
+    document.body.classList.add('overflow-hidden')
+    return () => {
+      document.removeEventListener('keydown', onKeyDown)
+      document.body.classList.remove('overflow-hidden')
+    }
+  }, [onClose])
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.25 }}
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 md:p-12"
+    >
+      <div
+        className="absolute inset-0 backdrop-blur-sm"
+        style={{ backgroundColor: 'rgba(0,0,0,0.55)' }}
+        onClick={onClose}
+      />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.92, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.92, y: 20 }}
+        transition={{ duration: 0.35, ease: [0.34, 1.56, 0.64, 1] }}
+        className="relative flex max-h-full w-full max-w-5xl flex-col overflow-hidden rounded-xl bg-surface-container-lowest shadow-2xl"
+      >
+        <div className="flex items-center justify-between border-b border-surface-variant bg-surface p-6">
+          {entry.badge ? (
+            <span className="inline-block rounded-full bg-tertiary-fixed px-3 py-1 text-label-sm font-label-sm text-on-tertiary-fixed-variant shadow-sm">
+              {entry.badge}
+            </span>
+          ) : (
+            <span />
+          )}
+          <button
+            type="button"
+            onClick={onClose}
+            className="group rounded-full p-2 text-on-surface-variant transition-colors hover:bg-surface-variant"
+            aria-label="Close"
+          >
+            <span className="material-symbols-outlined transition-transform group-hover:scale-110">
+              close
+            </span>
+          </button>
+        </div>
+
+        <div className="flex-grow overflow-y-auto">
+          <div className="flex flex-col md:flex-row">
+            <div className="flex flex-col justify-center p-6 md:w-2/5 md:p-10">
+              <h2 className="text-headline-md font-headline-md text-primary mb-1">{entry.title}</h2>
+              {entry.subtitle && (
+                <p className="mb-1 text-label-bold font-label-bold text-secondary">{entry.subtitle}</p>
+              )}
+              <p className="mb-6 text-label-bold font-label-bold text-outline">{entry.date}</p>
+              <p className="mb-8 text-body-md font-body-md text-on-surface-variant">{entry.description}</p>
+              <div className="mb-8 flex flex-wrap gap-2">
+                {entry.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-md bg-surface-container-high px-3 py-1 text-label-sm font-label-sm text-on-surface-variant"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              {entry.link && (
+                <a
+                  className="mt-auto inline-flex items-center gap-2 self-start text-label-sm font-label-bold text-primary hover:underline"
+                  href={entry.link}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  View Repo <span className="material-symbols-outlined text-[16px]">arrow_outward</span>
+                </a>
+              )}
+            </div>
+
+            <div className="relative min-h-[320px] bg-surface-container md:w-3/5">
+              {entry.image ? (
+                <img
+                  src={entry.image}
+                  alt={`${entry.title} photo`}
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary-container/30 via-transparent to-transparent">
+                  <span className="material-symbols-outlined text-primary/40" style={{ fontSize: 220 }}>
+                    {entry.icon ?? 'emoji_events'}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </motion.div>
     </motion.div>
   )
 }
 
 export default function HackathonsSection() {
+  const [openIndex, setOpenIndex] = useState<number | null>(null)
+
   return (
     <section
       id="hackathons"
@@ -115,12 +208,18 @@ export default function HackathonsSection() {
           </p>
         </div>
 
-        <div className="flex flex-col gap-10 pb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 auto-rows-[minmax(220px,auto)] pb-8">
           {HACKATHONS.map((entry, i) => (
-            <HackathonCard key={entry.title} entry={entry} index={i} />
+            <HackathonTile key={entry.title} entry={entry} index={i} onOpen={() => setOpenIndex(i)} />
           ))}
         </div>
       </div>
+
+      <AnimatePresence>
+        {openIndex !== null && (
+          <HackathonModal entry={HACKATHONS[openIndex]} onClose={() => setOpenIndex(null)} />
+        )}
+      </AnimatePresence>
     </section>
   )
 }
