@@ -11,6 +11,18 @@ const THUMB_ICONS: Record<ProjectCategory, string> = {
 
 const THUMB_SHAPE_CLASSES = ['blob-bg', 'rounded-tr-[40px]', 'rounded-bl-[40px]', '', 'rounded-br-[40px]']
 
+function renderBoldText(text: string) {
+  return text.split(/(\*\*.+?\*\*)/g).map((part, i) =>
+    part.startsWith('**') && part.endsWith('**') ? (
+      <strong key={i} className="font-bold text-on-surface">
+        {part.slice(2, -2)}
+      </strong>
+    ) : (
+      part
+    ),
+  )
+}
+
 export default function ProjectsSection() {
   const [activeFilter, setActiveFilter] = useState<ProjectCategory | 'all'>('all')
 
@@ -67,9 +79,17 @@ export default function ProjectsSection() {
                   <div
                     className={`h-32 w-full bg-gradient-to-br from-primary/15 via-secondary-container/40 to-tertiary-fixed/20 rounded-lg mb-6 relative overflow-hidden flex items-center justify-center ${THUMB_SHAPE_CLASSES[idx % THUMB_SHAPE_CLASSES.length]}`}
                   >
-                    <span className="material-symbols-outlined text-primary/50 text-[40px]">
-                      {THUMB_ICONS[project.category]}
-                    </span>
+                    {project.image ? (
+                      <img
+                        src={project.image}
+                        alt={`${project.title} thumbnail`}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span className="material-symbols-outlined text-primary/50 text-[40px]">
+                        {THUMB_ICONS[project.category]}
+                      </span>
+                    )}
                   </div>
 
                   {project.badge && (
@@ -90,12 +110,15 @@ export default function ProjectsSection() {
                   </div>
 
                   <h3 className="text-headline-sm font-headline-sm text-primary mb-2">{project.title}</h3>
-                  {project.description && (
-                    <p className="text-body-md font-body-md text-on-surface-variant flex-grow mb-6">
-                      {project.description}
-                    </p>
+                  {project.bullets ? (
+                    <ul className="text-body-md font-body-md text-on-surface-variant flex-grow mb-6 space-y-1.5 list-disc list-outside pl-4">
+                      {project.bullets.map((bullet, i) => (
+                        <li key={i}>{renderBoldText(bullet)}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <div className="flex-grow mb-6" />
                   )}
-                  {!project.description && <div className="flex-grow mb-6" />}
 
                   <div className="flex gap-4 mt-auto">
                     {project.github && (

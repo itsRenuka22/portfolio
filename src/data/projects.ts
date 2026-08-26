@@ -1,13 +1,25 @@
+import docQueryAiThumb from '../assets/projects/DocQueryAI.png'
+import codeGuardianThumb from '../assets/projects/CodeGuardian.png'
+import devLensThumb from '../assets/projects/DevLensAi.png'
+import paperGapThumb from '../assets/projects/PaperGap.png'
+import studentSuccessNavigatorThumb from '../assets/projects/StudentSuccessNavigator.png'
+import veriFiThumb from '../assets/projects/VeriFi.png'
+import oneTableThumb from '../assets/projects/OneTable.png'
+import campusMarketplaceThumb from '../assets/projects/CampusMarketPlace.png'
+import pawnderThumb from '../assets/projects/Pawnder.png'
+import mortgageRiskThumb from '../assets/projects/ExplainableMortgageLending.png'
+
 export type ProjectCategory = 'ai' | 'data' | 'fullstack'
 
 export interface Project {
   title: string
-  description?: string
+  bullets?: string[]
   tags: string[]
   category: ProjectCategory
   github?: string
   liveUrl?: string
   badge?: string
+  image?: string
 }
 
 export const PROJECT_CATEGORIES: { id: ProjectCategory | 'all'; label: string }[] = [
@@ -20,66 +32,109 @@ export const PROJECT_CATEGORIES: { id: ProjectCategory | 'all'; label: string }[
 export const PROJECTS: Project[] = [
   {
     title: 'DocQuery AI',
-    description:
-      'Delivered accurate, context-aware answers across multi-turn document queries via a RAG pipeline with FastAPI and Groq API for low-latency inference and cosine similarity retrieval; deployed cloud-native on AWS with Docker, React + TypeScript, S3, and DynamoDB.',
-    tags: ['RAG', 'FastAPI', 'React', 'TypeScript', 'Groq API', 'AWS', 'S3', 'DynamoDB', 'Docker'],
+    bullets: [
+      'PDF Q&A on AWS: FastAPI + Gemini 2.0 Flash, EC2/S3/DynamoDB',
+      'Minimal-permission IAM policy, Dockerized deploy',
+      'Next.js 15 + Tailwind frontend, multi-PDF session history',
+    ],
+    tags: ['FastAPI', 'Gemini API', 'Next.js', 'TypeScript', 'AWS (EC2, S3, DynamoDB)', 'Docker'],
     category: 'ai',
     github: 'https://github.com/itsRenuka22/DocQueryAI',
+    image: docQueryAiThumb,
   },
   {
     title: 'CodeGuardian',
-    description:
-      'Reduced vulnerability detection time to 0.43s/scan via a FastAPI web service + CLI covering 13 OWASP/CWE categories; achieved 95.74% F1 with a Planner-Executor-Hybrid Critic multi-agent pipeline combining GraphRAG retrieval with LLM override logic, validated on a 120-case benchmark.',
+    bullets: [
+      '**0.43s/scan** vulnerability detection, **13 OWASP/CWE** categories',
+      '**95.74% F1** via GraphRAG + LLM-critic multi-agent pipeline',
+      'Validated on a **120-case** benchmark',
+    ],
     tags: ['Python', 'FastAPI', 'GraphRAG', 'ChromaDB', 'Gemini'],
     category: 'ai',
     github: 'https://github.com/itsRenuka22/codeguardian',
+    image: codeGuardianThumb,
   },
   {
     title: 'DevLens',
-    description:
-      'Consolidated dev productivity signals across GitHub, Jira, and Google Calendar via Fivetran, using a Gemini-powered ADK agent on Vertex AI; integrated 2 MCP servers, streaming activity across 4 real-time SSE channels to a Next.js dashboard; deployed on Cloud Run with FastAPI async backend, 5 BigQuery metric views, Firestore session persistence.',
-    tags: ['Python', 'FastAPI', 'Google ADK', 'MCP', 'BigQuery', 'Vertex AI', 'Cloud Run', 'Firestore', 'Next.js'],
+    bullets: [
+      'Unified dev signals from **3 tools** (GitHub, Jira, Calendar) via Gemini ADK agent',
+      '**2 MCP servers**, **4 real-time SSE** channels to a Next.js dashboard',
+      'Cloud Run + FastAPI, **5 BigQuery** views, Firestore persistence',
+    ],
+    tags: ['Python', 'FastAPI', 'Google ADK', 'MCP', 'BigQuery', 'Vertex AI', 'Firestore', 'Next.js'],
     category: 'ai',
     github: 'https://github.com/itsRenuka22/DevLens',
     badge: 'Built at Google Cloud Rapid Agent Hackathon',
+    image: devLensThumb,
   },
   {
     title: 'PaperGap',
-    description:
-      'Engineered a 5-phase AI agent pipeline analyzing 250M+ research papers, surfacing top 3 underexplored research gaps per topic via parallel Nemotron agents scoring gap mentions, citation frontier detection, and concept isolation.',
+    bullets: [
+      'Scanned **250M+ papers** with 5-phase parallel Nemotron agent pipeline',
+      'Surfaced **top 3** research gaps per topic',
+    ],
     tags: ['Python', 'NVIDIA Nemotron', 'multi-agent orchestration'],
     category: 'ai',
+    github: 'https://github.com/itsRenuka22/nvda-nemotron-agent',
     badge: 'Built at NVIDIA GTC Agents for Impact Hackathon',
+    image: paperGapThumb,
   },
   {
-    title: 'CSUCI Student Success Navigator',
-    description: '96% corpus faithfulness / 94% answer faithfulness across a 140-question eval set.',
+    title: 'Ekho (CSUCI Student Success Navigator)',
+    bullets: [
+      'RAG chatbot for CSU Channel Islands, shipped in **1 week**',
+      '**96%** corpus faithfulness, **94%** answer faithfulness (140-question eval)',
+    ],
     tags: ['React 19', 'Vite', 'AWS Lambda', 'Bedrock', 'API Gateway', 'CloudFront'],
     category: 'ai',
-    github: 'https://github.com/asherdrake/CSUCI-StudentSuccessNavigator',
+    github: 'https://github.com/itsRenuka22/CSUCI-StudentSuccessNavigator',
+    image: studentSuccessNavigatorThumb,
   },
   {
     title: 'VeriFi',
-    description:
-      'Sustained 155.8 TPS at 12ms p95 latency for real-time fraud detection via a distributed Kafka pipeline validated with Locust; XGBoost model at 0.8295 ROC AUC combined with 8 rule-based fraud signals; Prometheus/Grafana observability across a 5-microservice GKE deployment with HPA and health probes.',
+    bullets: [
+      '**155.8 TPS** at **12ms p95** for real-time fraud detection, Kafka pipeline',
+      '**0.8295 ROC AUC**: XGBoost + 8 rule-based signals',
+      'Prometheus/Grafana across **5-microservice** GKE deployment',
+    ],
     tags: ['Kafka', 'Redis', 'PostgreSQL', 'Docker', 'Kubernetes', 'Grafana', 'XGBoost'],
     category: 'data',
     github: 'https://github.com/itsRenuka22/VeriFi',
+    image: veriFiThumb,
   },
   {
-    title: 'Startup-Radar',
-    tags: ['Python', 'Flask', 'React 19', 'Vite', 'Bright Data API'],
+    title: 'OneTable',
+    bullets: [
+      "Memory layer recalling each diner's constraints across a session",
+      'Live order negotiation through mid-session preference changes',
+      'Checkout flow writing outcomes back to memory',
+    ],
+    tags: ['Next.js', 'TypeScript', 'Agent Memory', 'Negotiation Engine'],
     category: 'data',
-    badge: 'Built at AWS Loft',
+    github: 'https://github.com/itsRenuka22/OneTable',
+    badge: 'Built at Xtrace Agent Memory Hackathon (Winner)',
+    image: oneTableThumb,
   },
   {
-    title: 'Data Mining Course Project',
-    tags: ['TBD'],
+    title: 'Explainable Mortgage Lending Risk Intelligence',
+    bullets: [
+      'Predicted mortgage lending risk on 2022 HMDA data (CA conventional home purchase loans)',
+      'Owned advanced modeling + hyperparameter tuning across Logistic Regression, Random Forest, XGBoost',
+      'SHAP-based explainability + fairness analysis across demographic groups',
+    ],
+    tags: ['Python', 'Pandas', 'Scikit-learn', 'XGBoost', 'SHAP', 'Jupyter'],
     category: 'data',
+    github: 'https://github.com/itsRenuka22/255_hmda-mortgage-risk-intelligence-',
     liveUrl: 'https://colab.research.google.com/drive/1WqaTcQAZLWTRWKg4e0uCtfTBgaa960zj',
+    image: mortgageRiskThumb,
   },
   {
     title: 'Campus Marketplace (CMPE 202)',
+    bullets: [
+      'AI shopping assistant UI, **8-state** conversation flow, Gemini function calling',
+      'Auth, protected routes, moderation flow',
+      'Docker + Terraform on AWS (RDS, ALB, EC2 Auto Scaling)',
+    ],
     tags: [
       'React 18',
       'TypeScript',
@@ -92,10 +147,15 @@ export const PROJECTS: Project[] = [
       'AWS (RDS/ALB/ASG)',
     ],
     category: 'fullstack',
+    github: 'https://github.com/itsRenuka22/CampusMarketPlace',
+    image: campusMarketplaceThumb,
   },
   {
     title: 'Pawnder (CMPE 285)',
+    bullets: ['Full-stack swipe-voting app, React 19 + Supabase, Postgres RLS'],
     tags: ['React 19', 'TypeScript', 'Supabase', 'Tailwind CSS', 'Framer Motion'],
     category: 'fullstack',
+    github: 'https://github.com/itsRenuka22/Pawnder',
+    image: pawnderThumb,
   },
 ]

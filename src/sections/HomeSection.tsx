@@ -1,15 +1,7 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, type ReactNode } from 'react'
 import WavyText from '../components/WavyText'
+import WaveHeading from '../components/WaveHeading'
 import headshot from '../assets/headshot.jpg'
-
-const TOTAL_PROJECT_COUNT = 10
-
-const STATS = [
-  { value: '3.62', label: 'MS CGPA / 4.0' },
-  { value: '3', label: 'Publications' },
-  { value: '6', label: 'Hackathons' },
-  { value: String(TOTAL_PROJECT_COUNT), label: 'Projects' },
-]
 
 const EDUCATION = [
   {
@@ -26,12 +18,11 @@ const EDUCATION = [
   },
 ]
 
-const ABOUT_LINES = [
-  'I learn backend systems by breaking them.',
-  'Rebuilt a fraud pipeline on Kafka after it choked.',
-  'Fixed a security scanner that flagged everything.',
-  'I also like a ticking clock. Six hackathons, two wins, most just hours long.',
-  "None of it's on a transcript, but it's where the real learning happens.",
+const ABOUT_PARAGRAPHS: ReactNode[] = [
+  "System breaker turned builder. I've redesigned a choking fraud pipeline using Kafka, re-architected broken security scanning logic, and led AI initiatives representing SJSU." ,
+  <>
+    <strong>Winner of the President's Leadership Coin</strong>, an honor given to a select few for university-wide leadership and service.
+  </>,
 ]
 
 export default function HomeSection() {
@@ -41,6 +32,7 @@ export default function HomeSection() {
   const blobImageRef = useRef<HTMLDivElement>(null)
   const blobShadowRef = useRef<HTMLDivElement>(null)
   const aboutRef = useRef<HTMLDivElement>(null)
+  const lineHighlightRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -89,24 +81,107 @@ export default function HomeSection() {
 
   useEffect(() => {
     const container = aboutRef.current
-    if (!container) return
+    const highlight = lineHighlightRef.current
+    if (!container || !highlight) return
 
-    const lines = container.querySelectorAll<HTMLElement>('.marker-reveal')
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return
-          lines.forEach((line, i) => {
-            setTimeout(() => line.classList.add('is-revealed'), i * 220)
-          })
-          observer.disconnect()
-        })
-      },
-      { threshold: 0.4 },
-    )
-    observer.observe(container)
+    const getCaretRange = (x: number, y: number): Range | null => {
+      if (document.caretRangeFromPoint) {
+        return document.caretRangeFromPoint(x, y)
+      }
+      const withCaretPosition = document as Document & {
+        caretPositionFromPoint?: (x: number, y: number) => { offsetNode: Node; offset: number } | null
+      }
+      const pos = withCaretPosition.caretPositionFromPoint?.(x, y)
+      if (!pos) return null
+      const range = document.createRange()
+      range.setStart(pos.offsetNode, pos.offset)
+      range.collapse(true)
+      return range
+    }
 
-    return () => observer.disconnect()
+    let currentLineKey = ''
+
+    const onMouseMove = (e: MouseEvent) => {
+      const caret = getCaretRange(e.clientX, e.clientY)
+      const textNode = caret?.startContainer
+      if (!caret || !textNode || !container.contains(textNode) || textNode.nodeType !== Node.TEXT_NODE) {
+        highlight.style.opacity = '0'
+        currentLineKey = ''
+        return
+      }
+
+      const text = textNode.textContent ?? ''
+      const paragraphEl = textNode.parentElement?.closest('p') ?? textNode.parentElement
+      const lineRange = document.createRange()
+      lineRange.selectNodeContents(paragraphEl ?? textNode)
+      const fullRects = Array.from(lineRange.getClientRects()).filter((r) => r.width > 0)
+
+      if (fullRects.length === 0 || text.trim().length === 0) {
+        highlight.style.opacity = '0'
+        currentLineKey = ''
+        return
+      }
+
+      // Pick the nearest line by vertical distance rather than requiring exact
+      // containment — e.clientY is reported as an integer while getClientRects()
+      // returns fractional bounds, so a strict top/bottom check can miss by a
+      // sub-pixel gap right at a line boundary.
+      const verticalDistance = (r: DOMRect) =>
+        e.clientY < r.top ? r.top - e.clientY : e.clientY > r.bottom ? e.clientY - r.bottom : 0
+      const hitRect = fullRects.reduce((closest, r) =>
+        verticalDistance(r) < verticalDistance(closest) ? r : closest,
+      )
+
+      // Merge every rect on the same visual line (e.g. split by an inline <strong>)
+      // into one bounding box so the highlight covers the full line, not just one run.
+      const sameLineRects = fullRects.filter(
+        (r) => r.width > 0 && Math.abs(r.top - hitRect.top) < 1 && Math.abs(r.bottom - hitRect.bottom) < 1,
+      )
+      const bounds = sameLineRects.reduce(
+        (acc, r) => ({
+          top: Math.min(acc.top, r.top),
+          bottom: Math.max(acc.bottom, r.bottom),
+          left: Math.min(acc.left, r.left),
+          right: Math.max(acc.right, r.right),
+        }),
+        { top: hitRect.top, bottom: hitRect.bottom, left: hitRect.left, right: hitRect.right },
+      )
+      const lineRect = { ...bounds, width: bounds.right - bounds.left, height: bounds.bottom - bounds.top }
+
+      const containerRect = container.getBoundingClientRect()
+      const top = lineRect.top - containerRect.top
+      const left = lineRect.left - containerRect.left
+      const lineKey = `${top}:${left}:${lineRect.width}`
+
+      highlight.style.opacity = '1'
+      highlight.style.top = `${top}px`
+      highlight.style.left = `${left}px`
+      highlight.style.width = `${lineRect.width}px`
+      highlight.style.height = `${lineRect.height}px`
+
+      if (lineKey !== currentLineKey) {
+        currentLineKey = lineKey
+        highlight.style.transition = 'none'
+        highlight.style.transform = 'scaleX(0)'
+        // Force reflow so the next transform change animates.
+        void highlight.offsetWidth
+        highlight.style.transition = ''
+        highlight.style.transform = 'scaleX(1)'
+      }
+    }
+
+    const onMouseLeave = () => {
+      currentLineKey = ''
+      highlight.style.opacity = '0'
+    }
+
+    container.addEventListener('mousemove', onMouseMove)
+    container.addEventListener('mouseleave', onMouseLeave)
+
+    return () => {
+      container.removeEventListener('mousemove', onMouseMove)
+      container.removeEventListener('mouseleave', onMouseLeave)
+    }
   }, [])
 
   return (
@@ -124,13 +199,11 @@ export default function HomeSection() {
           <h2 className="font-headline-md text-headline-md text-primary relative z-10 cursor-default">
             <WavyText text="Software Engineer & AI Systems Builder" className="wavy-title" />
           </h2>
-          <div
-            ref={aboutRef}
-            className="cursor-default flex flex-col gap-1.5 relative z-10 max-w-2xl"
-          >
-            {ABOUT_LINES.map((line, i) => (
+          <div ref={aboutRef} className="cursor-default flex flex-col gap-1.5 relative z-10 max-w-2xl">
+            <div ref={lineHighlightRef} className="marker-line-highlight" />
+            {ABOUT_PARAGRAPHS.map((paragraph, i) => (
               <p key={i} className="font-body-md text-body-md text-on-surface-variant leading-snug">
-                <span className="marker-reveal">{line}</span>
+                {paragraph}
               </p>
             ))}
           </div>
@@ -149,24 +222,14 @@ export default function HomeSection() {
             </button>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-3 pt-3 border-t-2 border-secondary-container/30 relative z-10">
-            {STATS.map((stat) => (
-              <div key={stat.label} className="flex flex-col gap-0.5 stat-block cursor-default">
-                <span className="font-headline-sm text-headline-sm text-primary stat-num">{stat.value}</span>
-                <span className="font-label-sm text-label-sm text-on-surface-variant">{stat.label}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-3 pt-3 border-t-2 border-secondary-container/30 relative z-10">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="material-symbols-outlined text-primary text-[20px]">school</span>
-              <h3 className="font-headline-sm text-headline-sm text-on-surface relative inline-block">
-                Education
-                <span className="absolute -bottom-1 left-0 w-10 h-1 rounded-full bg-primary" />
+          <div className="mt-5 pt-5 border-t-2 border-secondary-container/30 relative z-10">
+            <div className="flex items-center gap-3 mb-4">
+              <span className="material-symbols-outlined text-primary text-[28px]">school</span>
+              <h3 className="text-display-lg-mobile md:text-display-lg font-display-lg-mobile md:font-display-lg text-primary relative inline-block cursor-default tracking-normal">
+                <WaveHeading text="Education" />
               </h3>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-secondary-container/10 border border-secondary-container/30 rounded-3xl p-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-secondary-container/10 border border-secondary-container/30 rounded-3xl p-4">
               {EDUCATION.map((edu) => (
                 <div
                   key={edu.degree}
@@ -201,9 +264,6 @@ export default function HomeSection() {
             className="w-64 h-64 md:w-96 md:h-96 relative z-10 organic-shape overflow-hidden border-4 border-surface-container-lowest shadow-violet-float"
           >
             <img src={headshot} alt="Renuka Prasad Patwari" className="w-full h-full object-cover" />
-          </div>
-          <div className="absolute -bottom-4 right-10 md:-left-4 md:bottom-10 bg-primary/20 backdrop-blur-md border border-primary/30 text-primary px-4 py-2 rounded-full font-label-bold text-label-bold shadow-[0_4px_12px_rgba(107,56,212,0.2)] animate-float z-20">
-            Ready for the next challenge you throw at me
           </div>
         </div>
       </div>

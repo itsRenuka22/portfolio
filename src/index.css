@@ -92,17 +92,22 @@ body {
   color: #6b38d4;
 }
 
-.marker-reveal {
-  background-image: linear-gradient(rgba(166, 242, 207, 0.55), rgba(166, 242, 207, 0.55));
-  background-repeat: no-repeat;
-  background-size: 0% 100%;
-  background-position: 0 0;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
-  transition: background-size 0.9s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.marker-reveal.is-revealed {
-  background-size: 100% 100%;
+.marker-line-highlight {
+  position: absolute;
+  background-color: rgba(166, 242, 207, 0.55);
+  border-radius: 4px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: -1;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition:
+    top 0.15s ease-out,
+    left 0.15s ease-out,
+    width 0.15s ease-out,
+    height 0.15s ease-out,
+    opacity 0.2s ease-out,
+    transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .stat-block {
