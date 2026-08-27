@@ -221,7 +221,7 @@ export default function HackathonsSection() {
               <span className="absolute bottom-2 left-0 w-full h-4 bg-tertiary-fixed -z-10 -rotate-2 origin-left" />
             </span>
           </h1>
-          <p className="text-body-lg font-body-lg text-on-surface-variant max-w-2xl">
+          <p className="text-body-lg font-body-lg text-on-surface-variant max-w-2xl text-pretty">
             Hackathons are my sandbox — where sleep deprivation meets rapid prototyping, and ideas turn
             into working software in a weekend.
           </p>

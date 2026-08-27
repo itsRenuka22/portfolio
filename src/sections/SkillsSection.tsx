@@ -114,13 +114,13 @@ export default function SkillsSection() {
       </motion.div>
       <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop w-full relative z-10">
         <header className="mb-12 relative pl-organic-offset">
-          <h1 className="text-display-lg-mobile md:text-display-lg font-display-lg text-primary mb-4 relative z-10 cursor-default">
+          <h1 className="text-display-lg-mobile md:text-display-lg font-display-lg text-primary mb-4 relative z-10 cursor-default text-balance">
             <WaveHeading text="Technical" levels={[-10, -5]} />{' '}
             <span className="text-secondary">
               <WaveHeading text="Arsenal" levels={[-10, -5]} />
             </span>
           </h1>
-          <p className="text-body-lg font-body-lg text-on-surface-variant max-w-2xl">
+          <p className="text-body-lg font-body-lg text-on-surface-variant max-w-2xl text-pretty">
             A curated collection of tools, languages, and frameworks — building momentum through
             continuous learning and practical application.
           </p>

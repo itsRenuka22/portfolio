@@ -43,7 +43,7 @@ export default function ProjectsSection() {
             text="Selected Works"
             className="text-display-lg-mobile md:text-display-lg font-display-lg-mobile md:font-display-lg text-primary relative z-10 mb-2 flex flex-wrap cursor-default"
           />
-          <p className="text-body-lg font-body-lg text-on-surface-variant max-w-2xl relative z-10">
+          <p className="text-body-lg font-body-lg text-on-surface-variant max-w-2xl relative z-10 text-pretty">
             A collection of projects spanning generative AI, robust backend architectures, and full-stack
             experiences. Filter below to explore specific domains.
           </p>

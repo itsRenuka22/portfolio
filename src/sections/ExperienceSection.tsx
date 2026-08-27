@@ -95,7 +95,7 @@ export default function ExperienceSection() {
           <div className="inline-block mb-6 bg-secondary-container text-on-secondary-container px-4 py-2 rounded-xl organic-shape-1 font-label-bold text-label-bold">
             Professional Journey
           </div>
-          <h1 className="text-display-lg-mobile md:text-display-lg font-display-lg-mobile md:font-display-lg text-primary cursor-default">
+          <h1 className="text-display-lg-mobile md:text-display-lg font-display-lg-mobile md:font-display-lg text-primary cursor-default text-balance">
             <span className="relative inline-block mt-2">
               <WaveHeading text="Work Experience." />
               <svg
@@ -107,7 +107,7 @@ export default function ExperienceSection() {
               </svg>
             </span>
           </h1>
-          <p className="mt-8 max-w-2xl text-body-lg font-body-lg text-on-surface-variant">
+          <p className="mt-8 max-w-2xl text-body-lg font-body-lg text-on-surface-variant text-pretty">
             From secure microservices to multilingual OCR pipelines — building reliable systems and
             proving it with test coverage and clean deployments.
           </p>

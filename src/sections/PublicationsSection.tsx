@@ -9,7 +9,7 @@ export default function PublicationsSection() {
       className="snap-start snap-always h-screen w-full flex items-start relative overflow-y-auto pt-28 pb-16"
     >
       <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop w-full">
-        <h1 className="text-display-lg-mobile md:text-display-lg font-display-lg text-primary mb-16 relative inline-block cursor-default">
+        <h1 className="text-display-lg-mobile md:text-display-lg font-display-lg text-primary mb-16 relative inline-block cursor-default text-balance">
           <WaveHeading text="Publications" levels={[-12, -6, -2]} />
           <div className="absolute -bottom-2 left-0 w-full h-4 bg-tertiary-fixed -z-10 organic-shape" />
         </h1>

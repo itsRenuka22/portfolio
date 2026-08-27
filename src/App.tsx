@@ -24,10 +24,21 @@ function App() {
 
   return (
     <>
+      <a
+        href="#main-content"
+        className="fixed left-4 top-4 z-[100] -translate-y-20 rounded-lg bg-primary px-4 py-2 font-label-bold text-label-bold text-on-primary transition-transform duration-200 focus:translate-y-0"
+      >
+        Skip to content
+      </a>
       <TopNav activeId={activeId} onNavigate={handleNavigate} />
       <ProgressRail activeId={activeId} onNavigate={handleNavigate} />
       <ScrollContainerContext.Provider value={mainRef}>
-        <main ref={mainRef} className="h-screen w-full overflow-y-scroll snap-y snap-mandatory scroll-smooth">
+        <main
+          ref={mainRef}
+          id="main-content"
+          tabIndex={-1}
+          className="h-screen w-full overflow-y-scroll snap-y snap-mandatory scroll-smooth outline-none"
+        >
           <HomeSection />
           <ExperienceSection />
           <ProjectsSection />

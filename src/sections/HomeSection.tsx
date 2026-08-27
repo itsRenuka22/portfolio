@@ -236,16 +236,16 @@ export default function HomeSection() {
       <div ref={glowRef} className="hero-glow" />
       <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop w-full grid grid-cols-1 md:grid-cols-12 gap-gutter items-center pt-20">
         <motion.div className="md:col-span-7 flex flex-col gap-3 z-10 relative" style={{ transform: textTransform }}>
-          <h1 className="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface cursor-default leading-tight">
+          <h1 className="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface cursor-default leading-tight text-balance">
             <WavyText text="Renuka Prasad Patwari" className="wavy-text" />
           </h1>
-          <h2 className="font-headline-md text-headline-md text-primary relative z-10 cursor-default">
+          <h2 className="font-headline-md text-headline-md text-primary relative z-10 cursor-default text-balance">
             <WavyText text="Software Engineer & AI Systems Builder" className="wavy-title" />
           </h2>
           <div ref={aboutRef} className="cursor-default flex flex-col gap-1.5 relative z-10 max-w-2xl">
             <div ref={lineHighlightRef} className="marker-line-highlight" />
             {ABOUT_PARAGRAPHS.map((paragraph, i) => (
-              <p key={i} className="font-body-md text-body-md text-on-surface-variant leading-snug">
+              <p key={i} className="font-body-md text-body-md text-on-surface-variant leading-snug text-pretty">
                 {paragraph}
               </p>
             ))}
