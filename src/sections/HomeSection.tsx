@@ -1,7 +1,9 @@
 import { useEffect, useRef, type ReactNode } from 'react'
+import { motion } from 'framer-motion'
 import WavyText from '../components/WavyText'
 import WaveHeading from '../components/WaveHeading'
 import headshot from '../assets/headshot.jpg'
+import { useSectionParallax, useParallaxOffset } from '../hooks/useSectionParallax'
 
 const EDUCATION = [
   {
@@ -26,7 +28,17 @@ const ABOUT_PARAGRAPHS: ReactNode[] = [
 ]
 
 export default function HomeSection() {
+  const { sectionRef: parallaxRef, progress } = useSectionParallax<HTMLElement>()
+  const blobAY = useParallaxOffset(progress, -60)
+  const blobBY = useParallaxOffset(progress, 80)
+  const textY = useParallaxOffset(progress, 24)
+  const photoY = useParallaxOffset(progress, 44)
+
   const heroRef = useRef<HTMLElement>(null)
+  const setHeroRefs = (el: HTMLElement | null) => {
+    heroRef.current = el
+    parallaxRef.current = el
+  }
   const glowRef = useRef<HTMLDivElement>(null)
   const blobContainerRef = useRef<HTMLDivElement>(null)
   const blobImageRef = useRef<HTMLDivElement>(null)
@@ -187,12 +199,22 @@ export default function HomeSection() {
   return (
     <section
       id="home"
-      ref={heroRef}
+      ref={setHeroRefs}
       className="hero-section snap-start snap-always h-screen w-full flex items-center overflow-y-auto"
     >
+      <motion.div
+        className="hero-parallax-blob hero-parallax-blob-a"
+        style={{ y: blobAY }}
+        aria-hidden="true"
+      />
+      <motion.div
+        className="hero-parallax-blob hero-parallax-blob-b"
+        style={{ y: blobBY }}
+        aria-hidden="true"
+      />
       <div ref={glowRef} className="hero-glow" />
       <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop w-full grid grid-cols-1 md:grid-cols-12 gap-gutter items-center pt-20">
-        <div className="md:col-span-7 flex flex-col gap-3 z-10 relative">
+        <motion.div className="md:col-span-7 flex flex-col gap-3 z-10 relative" style={{ y: textY }}>
           <h1 className="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface cursor-default leading-tight">
             <WavyText text="Renuka Prasad Patwari" className="wavy-text" />
           </h1>
@@ -249,11 +271,12 @@ export default function HomeSection() {
               ))}
             </div>
           </div>
-        </div>
+        </motion.div>
 
-        <div
+        <motion.div
           ref={blobContainerRef}
           className="md:col-span-5 relative mt-6 md:mt-0 md:-translate-y-8 flex justify-center md:justify-end"
+          style={{ y: photoY }}
         >
           <div
             ref={blobShadowRef}
@@ -265,7 +288,7 @@ export default function HomeSection() {
           >
             <img src={headshot} alt="Renuka Prasad Patwari" className="w-full h-full object-cover" />
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   )

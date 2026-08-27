@@ -1,6 +1,75 @@
 import { motion } from 'framer-motion'
 import WaveHeading from '../components/WaveHeading'
-import { EXPERIENCE } from '../data/experience'
+import { EXPERIENCE, type ExperienceEntry } from '../data/experience'
+import { useSectionParallax, useParallaxOffset } from '../hooks/useSectionParallax'
+
+function ExperienceRow({ job }: { job: ExperienceEntry }) {
+  const { sectionRef, progress } = useSectionParallax<HTMLDivElement>()
+  const dotY = useParallaxOffset(progress, 10)
+  const contentY = useParallaxOffset(progress, 22)
+
+  return (
+    <div ref={sectionRef} className="relative z-10 flex flex-col md:flex-row gap-8 md:gap-16">
+      <div className="hidden md:flex flex-col items-center shrink-0 w-16">
+        <motion.div
+          style={{ y: dotY }}
+          className={`w-4 h-4 rounded-full mt-2 ${
+            job.accentClass === 'primary' ? 'bg-primary ring-4 ring-primary-fixed' : 'bg-outline-variant'
+          }`}
+        />
+      </div>
+
+      <motion.div className="flex-1" style={{ y: contentY }}>
+        <div
+          className={`bg-surface rounded-[24px_8px_32px_12px] p-6 md:p-10 experience-card relative overflow-hidden group ${
+            job.accentClass === 'primary' ? 'ambient-shadow-primary' : 'ambient-shadow-secondary'
+          }`}
+        >
+          <div className="absolute -right-16 -top-16 w-32 h-32 bg-secondary-fixed/20 rounded-full organic-shape-2 transition-transform duration-700 group-hover:scale-150 group-hover:bg-secondary-fixed/30" />
+          <div className="relative z-10">
+            <div className="flex flex-wrap gap-3 mb-6">
+              <span className="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-lg text-label-sm font-label-sm">
+                {job.dates}
+              </span>
+            </div>
+            <h2
+              className={`text-headline-md font-headline-md mb-2 transition-colors ${
+                job.accentClass === 'primary' ? 'text-primary' : 'text-secondary'
+              }`}
+            >
+              {job.title}
+            </h2>
+            <h3 className="text-headline-sm font-headline-sm text-on-surface mb-6">{job.company}</h3>
+
+            <ul className="space-y-4 mb-8">
+              {job.bullets.map((bullet, bIdx) => (
+                <li key={bIdx} className="flex items-start gap-4">
+                  <div
+                    className={`mt-1 w-2 h-2 rounded-full shrink-0 ${
+                      bIdx % 2 === 0 ? 'bg-primary organic-shape-1' : 'bg-secondary organic-shape-2'
+                    }`}
+                  />
+                  <span className="text-body-md font-body-md">{bullet}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="flex flex-wrap gap-2 pt-4 border-t border-outline-variant/30">
+              {job.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="text-label-sm font-label-sm px-3 py-1 rounded-full border border-outline-variant text-outline"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  )
+}
 
 export default function ExperienceSection() {
   return (
@@ -45,72 +114,8 @@ export default function ExperienceSection() {
         <div className="relative space-y-16 md:space-y-24">
           <div className="hidden md:block absolute left-8 top-12 bottom-12 w-0.5 bg-outline-variant/30 z-0" />
 
-          {EXPERIENCE.map((job, idx) => (
-            <motion.div
-              key={job.company}
-              className="relative z-10 flex flex-col md:flex-row gap-8 md:gap-16"
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: idx * 0.15 }}
-            >
-              <div className="hidden md:flex flex-col items-center shrink-0 w-16">
-                <div
-                  className={`w-4 h-4 rounded-full mt-2 ${
-                    job.accentClass === 'primary' ? 'bg-primary ring-4 ring-primary-fixed' : 'bg-outline-variant'
-                  }`}
-                />
-              </div>
-
-              <div className="flex-1">
-                <div
-                  className={`bg-surface rounded-[24px_8px_32px_12px] p-6 md:p-10 experience-card relative overflow-hidden group ${
-                    job.accentClass === 'primary' ? 'ambient-shadow-primary' : 'ambient-shadow-secondary'
-                  }`}
-                >
-                  <div className="absolute -right-16 -top-16 w-32 h-32 bg-secondary-fixed/20 rounded-full organic-shape-2 transition-transform duration-700 group-hover:scale-150 group-hover:bg-secondary-fixed/30" />
-                  <div className="relative z-10">
-                    <div className="flex flex-wrap gap-3 mb-6">
-                      <span className="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-lg text-label-sm font-label-sm">
-                        {job.dates}
-                      </span>
-                    </div>
-                    <h2
-                      className={`text-headline-md font-headline-md mb-2 transition-colors ${
-                        job.accentClass === 'primary' ? 'text-primary' : 'text-secondary'
-                      }`}
-                    >
-                      {job.title}
-                    </h2>
-                    <h3 className="text-headline-sm font-headline-sm text-on-surface mb-6">{job.company}</h3>
-
-                    <ul className="space-y-4 mb-8">
-                      {job.bullets.map((bullet, bIdx) => (
-                        <li key={bIdx} className="flex items-start gap-4">
-                          <div
-                            className={`mt-1 w-2 h-2 rounded-full shrink-0 ${
-                              bIdx % 2 === 0 ? 'bg-primary organic-shape-1' : 'bg-secondary organic-shape-2'
-                            }`}
-                          />
-                          <span className="text-body-md font-body-md">{bullet}</span>
-                        </li>
-                      ))}
-                    </ul>
-
-                    <div className="flex flex-wrap gap-2 pt-4 border-t border-outline-variant/30">
-                      {job.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="text-label-sm font-label-sm px-3 py-1 rounded-full border border-outline-variant text-outline"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
+          {EXPERIENCE.map((job) => (
+            <ExperienceRow key={job.company} job={job} />
           ))}
         </div>
       </div>

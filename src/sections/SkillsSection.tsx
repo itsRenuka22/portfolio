@@ -1,11 +1,17 @@
 import { useEffect, useRef } from 'react'
+import { motion } from 'framer-motion'
 import WaveHeading from '../components/WaveHeading'
 import { SKILL_CATEGORIES } from '../data/skills'
+import { useSectionParallax, useParallaxOffset } from '../hooks/useSectionParallax'
 
 const AUTO_ADVANCE_MS = 3000
 const RESUME_DELAY_MS = 3000
+const TEXTURE_HORIZONTAL_RATE = 0.35
 
 export default function SkillsSection() {
+  const { sectionRef, progress } = useSectionParallax<HTMLElement>()
+  const textureY = useParallaxOffset(progress, 16)
+  const textureRef = useRef<HTMLDivElement>(null)
   const sliderRef = useRef<HTMLDivElement>(null)
   const panelRefs = useRef<(HTMLDivElement | null)[]>([])
   const currentPanel = useRef(0)
@@ -54,6 +60,9 @@ export default function SkillsSection() {
       if (!panel) return
       const panelWidth = panel.offsetWidth + 32
       currentPanel.current = Math.round(slider.scrollLeft / panelWidth)
+      if (textureRef.current && !reduceMotion) {
+        textureRef.current.style.transform = `translateX(${-slider.scrollLeft * TEXTURE_HORIZONTAL_RATE}px)`
+      }
     }
 
     slider.addEventListener('scroll', onScroll)
@@ -90,9 +99,13 @@ export default function SkillsSection() {
   return (
     <section
       id="skills"
+      ref={sectionRef}
       className="snap-start snap-always h-screen w-full flex items-start relative overflow-y-auto pt-28 pb-16"
     >
-      <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop w-full">
+      <motion.div className="absolute inset-0 overflow-hidden" style={{ y: textureY }} aria-hidden="true">
+        <div ref={textureRef} className="skills-parallax-texture" />
+      </motion.div>
+      <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop w-full relative z-10">
         <header className="mb-12 relative pl-organic-offset">
           <h1 className="text-display-lg-mobile md:text-display-lg font-display-lg text-primary mb-4 relative z-10 cursor-default">
             <WaveHeading text="Technical" levels={[-10, -5]} />{' '}

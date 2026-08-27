@@ -387,6 +387,63 @@ body {
   }
 }
 
+/* ---------- Parallax (continuous, scroll-linked via framer-motion) ----------
+   These elements get their `transform: translateY()` from framer-motion's
+   useScroll/useTransform inline style (see useSectionParallax.ts), driven by
+   live scroll position rather than a CSS transition — only static positioning/
+   look lives here. */
+
+.hero-parallax-blob {
+  position: absolute;
+  border-radius: 9999px;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(48px);
+}
+.hero-parallax-blob-a {
+  top: -10%;
+  left: 5%;
+  width: 220px;
+  height: 220px;
+  background: rgba(107, 56, 212, 0.14);
+}
+.hero-parallax-blob-b {
+  bottom: -8%;
+  right: 8%;
+  width: 260px;
+  height: 260px;
+  background: rgba(166, 242, 207, 0.18);
+}
+
+.skills-parallax-texture {
+  position: absolute;
+  inset: -10% -5%;
+  pointer-events: none;
+  z-index: 0;
+  background-image: radial-gradient(rgba(107, 56, 212, 0.16) 1.5px, transparent 1.5px);
+  background-size: 28px 28px;
+}
+
+/* Hackathon tile background photo: the drift wrapper (.hackathon-parallax-bg) gets its
+   translate from motion's inline style; the hover zoom lives on the <img> itself
+   (.hackathon-parallax-img) so the two transforms never collide on one element. */
+.hackathon-parallax-bg {
+  position: absolute;
+  inset: -20px 0;
+}
+.hackathon-parallax-img {
+  transition: transform 0.4s ease-out;
+  transform: scale(1.08);
+}
+.group:hover .hackathon-parallax-img {
+  transform: scale(1.14);
+}
+
+.contact-parallax-bg {
+  position: absolute;
+  inset: -10% 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animated-gradient-bg {
     animation: none;
@@ -407,6 +464,11 @@ body {
   .pub-card {
     animation: none;
     transition: none;
+    transform: none !important;
+  }
+
+  .hackathon-parallax-img {
+    transition: none !important;
     transform: none !important;
   }
 }

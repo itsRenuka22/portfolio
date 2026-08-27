@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import ParticleBackground from '../components/ParticleBackground'
+import { useSectionParallax, useParallaxOffset } from '../hooks/useSectionParallax'
 
 const CONTACT_DETAILS = [
   { icon: 'location_on', label: 'Location', value: 'San Jose, CA', bg: 'bg-tertiary-fixed text-on-tertiary-fixed' },
@@ -31,14 +32,21 @@ const itemVariants = {
 }
 
 export default function ContactSection() {
+  const { sectionRef, progress } = useSectionParallax<HTMLElement>()
+  const bgY = useParallaxOffset(progress, 30)
+  const cardY = useParallaxOffset(progress, 12)
+
   return (
     <section
       id="contact"
-      className="snap-start snap-always h-screen w-full flex items-center relative overflow-y-auto animated-gradient-bg"
+      ref={sectionRef}
+      className="snap-start snap-always h-screen w-full flex items-center relative overflow-y-auto"
     >
-      <ParticleBackground />
+      <motion.div className="contact-parallax-bg animated-gradient-bg absolute inset-0" style={{ y: bgY }}>
+        <ParticleBackground />
+      </motion.div>
       <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop w-full relative z-10">
-        <div className="relative">
+        <motion.div className="relative" style={{ y: cardY }}>
           <div className="absolute inset-0 bg-surface-container-low rounded-[40px] transform rotate-1 -z-10" />
           <motion.div
             className="bg-surface-container-lowest p-8 md:p-16 rounded-[32px] shadow-vk-base hover:shadow-vk-active transition-shadow duration-300"
@@ -94,7 +102,7 @@ export default function ContactSection() {
               </div>
             </div>
           </motion.div>
-        </div>
+        </motion.div>
       </div>
     </section>
   )

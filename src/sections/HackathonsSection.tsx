@@ -1,8 +1,13 @@
 import { useEffect, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import WaveHeading from '../components/WaveHeading'
 import { useDebouncedConfetti } from '../hooks/useDebouncedConfetti'
 import { HACKATHONS, type HackathonEntry, type HackathonSize } from '../data/hackathons'
+
+// Per-tile drift offsets so tiles don't settle in mechanical unison — this is a
+// one-time settle-on-entrance effect (not continuous scroll tracking), since several
+// independently-drifting backgrounds in a dense grid reads as noisy rather than depth.
+const PARALLAX_OFFSETS = [-14, 10, -8, 12, -9, 11]
 
 const SIZE_CLASSES: Record<HackathonSize, string> = {
   large: 'md:col-span-2 md:row-span-2',
@@ -22,6 +27,8 @@ function HackathonTile({
 }) {
   const { cardRef, onHoverStart } = useDebouncedConfetti()
   const isCompact = entry.size === 'square'
+  const reduceMotion = useReducedMotion()
+  const bgOffset = reduceMotion ? 0 : PARALLAX_OFFSETS[index % PARALLAX_OFFSETS.length]
 
   return (
     <motion.div
@@ -39,11 +46,19 @@ function HackathonTile({
         className="group relative flex h-full min-h-[220px] w-full flex-col overflow-hidden rounded-xl border border-surface-variant bg-surface-container-lowest text-left shadow-sm grayscale transition-all duration-400 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:grayscale-0 hover:shadow-2xl hover:z-10"
       >
         {entry.image ? (
-          <img
-            src={entry.image}
-            alt={`${entry.title} photo`}
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
+          <motion.div
+            className="hackathon-parallax-bg"
+            initial={{ y: bgOffset }}
+            whileInView={{ y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.9, delay: index * 0.08 + 0.1, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <img
+              src={entry.image}
+              alt={`${entry.title} photo`}
+              className="hackathon-parallax-img h-full w-full object-cover"
+            />
+          </motion.div>
         ) : (
           <div className="absolute inset-0 bg-gradient-to-br from-primary-container/25 via-transparent to-transparent">
             <span
@@ -56,7 +71,7 @@ function HackathonTile({
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
 
-        <div className="relative z-10 flex h-full flex-col justify-end p-6 md:p-8">
+        <div className="hackathon-parallax-fg relative z-10 flex h-full flex-col justify-end p-6 md:p-8">
           {entry.showBadgeOnCard && entry.badge && (
             <span className="mb-3 inline-block self-start rounded-full bg-tertiary-fixed px-3 py-1 text-label-sm font-label-sm text-on-tertiary-fixed-variant shadow-sm">
               {entry.badge}
