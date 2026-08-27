@@ -29,6 +29,8 @@ function HackathonTile({
   const isCompact = entry.size === 'square'
   const reduceMotion = useReducedMotion()
   const bgOffset = reduceMotion ? 0 : PARALLAX_OFFSETS[index % PARALLAX_OFFSETS.length]
+  const tileY = reduceMotion ? 0 : 56
+  const tileScale = reduceMotion ? 1 : 0.87
 
   const handleOpen = () => {
     if (entry.confetti) onHoverStart()
@@ -37,10 +39,10 @@ function HackathonTile({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: tileY, scale: tileScale }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.6, delay: index * 0.08 }}
+      transition={{ type: 'spring', stiffness: 180, damping: 17, delay: index * 0.1 }}
       className={`${SIZE_CLASSES[entry.size]} relative`}
     >
       <button
@@ -202,6 +204,7 @@ function HackathonModal({ entry, onClose }: { entry: HackathonEntry; onClose: ()
 
 export default function HackathonsSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
+  const reduceMotion = useReducedMotion()
 
   return (
     <section
@@ -209,7 +212,13 @@ export default function HackathonsSection() {
       className="snap-start snap-always h-screen w-full flex items-start relative overflow-y-auto pt-28 pb-16"
     >
       <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop w-full">
-        <div className="mb-16 max-w-3xl relative">
+        <motion.div
+          initial={{ opacity: 0, y: reduceMotion ? 0 : 70 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ type: 'spring', stiffness: 140, damping: 16 }}
+          className="mb-16 max-w-3xl relative"
+        >
           <div className="absolute -top-12 -left-12 w-24 h-24 bg-tertiary-fixed rounded-full opacity-50 blur-xl -z-10" />
           <h1 className="text-display-lg-mobile md:text-display-lg font-display-lg-mobile md:font-display-lg text-primary mb-6 relative z-10 cursor-default">
             <WaveHeading text="Hackathons &" levels={[-15, -8]} />
@@ -225,7 +234,7 @@ export default function HackathonsSection() {
             Hackathons are my sandbox — where sleep deprivation meets rapid prototyping, and ideas turn
             into working software in a weekend.
           </p>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 auto-rows-[minmax(220px,auto)] pb-8">
           {HACKATHONS.map((entry, i) => (

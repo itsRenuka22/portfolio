@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import ProximityWaveHeading from '../components/ProximityWaveHeading'
 import { PROJECT_CATEGORIES, PROJECTS, type ProjectCategory } from '../data/projects'
 
@@ -25,6 +25,8 @@ function renderBoldText(text: string) {
 
 export default function ProjectsSection() {
   const [activeFilter, setActiveFilter] = useState<ProjectCategory | 'all'>('all')
+  const reduceMotion = useReducedMotion()
+  const cardScale = reduceMotion ? 1 : 0.82
 
   const filtered = useMemo(
     () => PROJECTS.filter((p) => activeFilter === 'all' || p.category === activeFilter),
@@ -37,7 +39,13 @@ export default function ProjectsSection() {
       className="snap-start snap-always h-screen w-full flex items-start relative overflow-y-auto pt-28 pb-16"
     >
       <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop w-full">
-        <div className="mb-16 relative">
+        <motion.div
+          initial={{ opacity: 0, y: reduceMotion ? 0 : 70 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ type: 'spring', stiffness: 140, damping: 16 }}
+          className="mb-16 relative"
+        >
           <div className="absolute -top-10 -left-10 w-32 h-32 bg-primary/10 rounded-full blur-3xl z-0" />
           <ProximityWaveHeading
             text="Selected Works"
@@ -47,7 +55,7 @@ export default function ProjectsSection() {
             A collection of projects spanning generative AI, robust backend architectures, and full-stack
             experiences. Filter below to explore specific domains.
           </p>
-        </div>
+        </motion.div>
 
         <div className="flex flex-wrap gap-2 mb-12">
           {PROJECT_CATEGORIES.map((cat) => (
@@ -69,10 +77,14 @@ export default function ProjectsSection() {
               <motion.div
                 key={project.title}
                 layout
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.3 }}
+                initial={{ opacity: 0, scale: cardScale }}
+                whileInView={{
+                  opacity: 1,
+                  scale: 1,
+                  transition: { type: 'spring', stiffness: 200, damping: 18, delay: idx * 0.06 },
+                }}
+                viewport={{ once: true, amount: 0.2 }}
+                exit={{ opacity: 0, scale: cardScale, transition: { duration: 0.2, ease: [0.16, 1, 0.3, 1] } }}
                 className="relative z-10"
               >
                 <div className="project-card bg-surface-container-lowest rounded-xl border-b-4 border-secondary-container p-6 flex flex-col h-full">

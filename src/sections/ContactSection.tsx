@@ -1,4 +1,4 @@
-import { motion, useMotionTemplate } from 'framer-motion'
+import { motion, useMotionTemplate, useReducedMotion } from 'framer-motion'
 import ParticleBackground from '../components/ParticleBackground'
 import { useSectionParallax, useParallaxOffset } from '../hooks/useSectionParallax'
 
@@ -22,13 +22,8 @@ const SOCIALS = [
 const containerVariants = {
   hidden: {},
   show: {
-    transition: { staggerChildren: 0.12 },
+    transition: { staggerChildren: 0.1 },
   },
-}
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 }
 
 export default function ContactSection() {
@@ -37,6 +32,11 @@ export default function ContactSection() {
   const cardY = useParallaxOffset(progress, 12)
   const bgTransform = useMotionTemplate`translateY(${bgY}px)`
   const cardTransform = useMotionTemplate`translateY(${cardY}px)`
+  const reduceMotion = useReducedMotion()
+  const itemVariants = {
+    hidden: { opacity: 0, y: reduceMotion ? 0 : 56, scale: reduceMotion ? 1 : 0.9 },
+    show: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring' as const, stiffness: 180, damping: 17 } },
+  }
 
   return (
     <section

@@ -94,21 +94,6 @@ body {
     transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.stat-block {
-  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-@keyframes pop-bounce {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.15);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
 .hero-section {
   position: relative;
 }
@@ -405,13 +390,6 @@ body {
     transform: translateY(-8px) scale(1.1);
     color: #6b38d4;
   }
-  .stat-block:hover {
-    transform: scale(1.05) translateY(-4px);
-  }
-  .stat-block:hover .stat-num {
-    animation: pop-bounce 0.5s ease-out;
-    display: inline-block;
-  }
   .hero-section:hover .hero-glow {
     opacity: 1;
   }
@@ -450,8 +428,6 @@ body {
   .wavy-text span,
   .wavy-title span,
   .organic-shape,
-  .stat-block,
-  .stat-block:hover .stat-num,
   .experience-card,
   .blob-1,
   .blob-2,

@@ -1,17 +1,27 @@
-import { motion, useMotionTemplate } from 'framer-motion'
+import { motion, useMotionTemplate, useReducedMotion } from 'framer-motion'
 import WaveHeading from '../components/WaveHeading'
 import { EXPERIENCE, type ExperienceEntry } from '../data/experience'
 import { useSectionParallax, useParallaxOffset } from '../hooks/useSectionParallax'
 
-function ExperienceRow({ job }: { job: ExperienceEntry }) {
+function ExperienceRow({ job, index }: { job: ExperienceEntry; index: number }) {
   const { sectionRef, progress } = useSectionParallax<HTMLDivElement>()
   const dotY = useParallaxOffset(progress, 10)
   const contentY = useParallaxOffset(progress, 22)
   const dotTransform = useMotionTemplate`translateY(${dotY}px)`
   const contentTransform = useMotionTemplate`translateY(${contentY}px)`
+  const reduceMotion = useReducedMotion()
+  const rowY = reduceMotion ? 0 : 72
+  const rowScale = reduceMotion ? 1 : 0.92
 
   return (
-    <div ref={sectionRef} className="relative z-10 flex flex-col md:flex-row gap-8 md:gap-16">
+    <motion.div
+      ref={sectionRef}
+      initial={{ opacity: 0, y: rowY, scale: rowScale }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ type: 'spring', stiffness: 160, damping: 17, delay: index * 0.12 }}
+      className="relative z-10 flex flex-col md:flex-row gap-8 md:gap-16"
+    >
       <div className="hidden md:flex flex-col items-center shrink-0 w-16">
         <motion.div
           style={{ transform: dotTransform }}
@@ -69,11 +79,14 @@ function ExperienceRow({ job }: { job: ExperienceEntry }) {
           </div>
         </div>
       </motion.div>
-    </div>
+    </motion.div>
   )
 }
 
 export default function ExperienceSection() {
+  const reduceMotion = useReducedMotion()
+  const headerY = reduceMotion ? 0 : 70
+
   return (
     <section
       id="experience"
@@ -87,10 +100,10 @@ export default function ExperienceSection() {
       <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop w-full">
         <motion.header
           className="mb-16 md:mb-20 relative z-10"
-          initial={{ opacity: 0, y: 40 }}
+          initial={{ opacity: 0, y: headerY }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ type: 'spring', stiffness: 140, damping: 16 }}
         >
           <div className="inline-block mb-6 bg-secondary-container text-on-secondary-container px-4 py-2 rounded-xl organic-shape-1 font-label-bold text-label-bold">
             Professional Journey
@@ -116,8 +129,8 @@ export default function ExperienceSection() {
         <div className="relative space-y-16 md:space-y-24">
           <div className="hidden md:block absolute left-8 top-12 bottom-12 w-0.5 bg-outline-variant/30 z-0" />
 
-          {EXPERIENCE.map((job) => (
-            <ExperienceRow key={job.company} job={job} />
+          {EXPERIENCE.map((job, index) => (
+            <ExperienceRow key={job.company} job={job} index={index} />
           ))}
         </div>
       </div>

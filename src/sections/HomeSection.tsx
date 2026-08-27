@@ -1,5 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react'
-import { motion, useMotionTemplate } from 'framer-motion'
+import { motion, useMotionTemplate, useReducedMotion } from 'framer-motion'
 import WavyText from '../components/WavyText'
 import WaveHeading from '../components/WaveHeading'
 import headshot from '../assets/headshot.jpg'
@@ -37,6 +37,9 @@ export default function HomeSection() {
   const blobBTransform = useMotionTemplate`translateY(${blobBY}px)`
   const textTransform = useMotionTemplate`translateY(${textY}px)`
   const photoTransform = useMotionTemplate`translateY(${photoY}px)`
+  const reduceMotion = useReducedMotion()
+  const heroY = reduceMotion ? 0 : 64
+  const heroTransition = (delay: number) => ({ type: 'spring' as const, stiffness: 170, damping: 18, delay })
 
   const heroRef = useRef<HTMLElement>(null)
   const setHeroRefs = (el: HTMLElement | null) => {
@@ -236,21 +239,42 @@ export default function HomeSection() {
       <div ref={glowRef} className="hero-glow" />
       <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop w-full grid grid-cols-1 md:grid-cols-12 gap-gutter items-center pt-20">
         <motion.div className="md:col-span-7 flex flex-col gap-3 z-10 relative" style={{ transform: textTransform }}>
-          <h1 className="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface cursor-default leading-tight text-balance">
+          <motion.h1
+            initial={{ opacity: 0, y: heroY }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={heroTransition(0)}
+            className="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface cursor-default leading-tight text-balance"
+          >
             <WavyText text="Renuka Prasad Patwari" className="wavy-text" />
-          </h1>
-          <h2 className="font-headline-md text-headline-md text-primary relative z-10 cursor-default text-balance">
+          </motion.h1>
+          <motion.h2
+            initial={{ opacity: 0, y: heroY }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={heroTransition(0.1)}
+            className="font-headline-md text-headline-md text-primary relative z-10 cursor-default text-balance"
+          >
             <WavyText text="Software Engineer & AI Systems Builder" className="wavy-title" />
-          </h2>
-          <div ref={aboutRef} className="cursor-default flex flex-col gap-1.5 relative z-10 max-w-2xl">
+          </motion.h2>
+          <motion.div
+            ref={aboutRef}
+            initial={{ opacity: 0, y: heroY }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={heroTransition(0.2)}
+            className="cursor-default flex flex-col gap-1.5 relative z-10 max-w-2xl"
+          >
             <div ref={lineHighlightRef} className="marker-line-highlight" />
             {ABOUT_PARAGRAPHS.map((paragraph, i) => (
               <p key={i} className="font-body-md text-body-md text-on-surface-variant leading-snug text-pretty">
                 {paragraph}
               </p>
             ))}
-          </div>
-          <div className="flex flex-wrap gap-4 mt-1 relative z-10">
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: heroY }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={heroTransition(0.3)}
+            className="flex flex-wrap gap-4 mt-1 relative z-10"
+          >
             <button
               onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
               className="bg-primary text-on-primary px-6 py-2.5 rounded-full font-label-bold text-label-bold btn-pop transition-[transform,box-shadow] active:scale-[0.97]"
@@ -263,9 +287,14 @@ export default function HomeSection() {
             >
               Get in Touch
             </button>
-          </div>
+          </motion.div>
 
-          <div className="mt-5 pt-5 border-t-2 border-secondary-container/30 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: heroY }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={heroTransition(0.4)}
+            className="mt-5 pt-5 border-t-2 border-secondary-container/30 relative z-10"
+          >
             <div className="flex items-center gap-3 mb-4">
               <span className="material-symbols-outlined text-primary text-[28px]">school</span>
               <h3 className="text-display-lg-mobile md:text-display-lg font-display-lg-mobile md:font-display-lg text-primary relative inline-block cursor-default tracking-normal">
@@ -291,11 +320,14 @@ export default function HomeSection() {
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </motion.div>
 
         <motion.div
           ref={blobContainerRef}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.7, delay: 0.15 }}
           className="md:col-span-5 relative mt-6 md:mt-0 md:-translate-y-8 flex justify-center md:justify-end"
           style={{ transform: photoTransform }}
         >

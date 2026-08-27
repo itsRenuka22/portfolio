@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { motion, useMotionTemplate } from 'framer-motion'
+import { motion, useMotionTemplate, useReducedMotion } from 'framer-motion'
 import WaveHeading from '../components/WaveHeading'
 import { SKILL_CATEGORIES } from '../data/skills'
 import { useSectionParallax, useParallaxOffset } from '../hooks/useSectionParallax'
@@ -12,6 +12,9 @@ export default function SkillsSection() {
   const { sectionRef, progress } = useSectionParallax<HTMLElement>()
   const textureY = useParallaxOffset(progress, 16)
   const textureTransform = useMotionTemplate`translateY(${textureY}px)`
+  const reduceMotion = useReducedMotion()
+  const panelY = reduceMotion ? 0 : 48
+  const panelScale = reduceMotion ? 1 : 0.88
   const textureRef = useRef<HTMLDivElement>(null)
   const sliderRef = useRef<HTMLDivElement>(null)
   const panelRefs = useRef<(HTMLDivElement | null)[]>([])
@@ -113,7 +116,13 @@ export default function SkillsSection() {
         <div ref={textureRef} className="skills-parallax-texture" />
       </motion.div>
       <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop w-full relative z-10">
-        <header className="mb-12 relative pl-organic-offset">
+        <motion.header
+          initial={{ opacity: 0, y: reduceMotion ? 0 : 70 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ type: 'spring', stiffness: 140, damping: 16 }}
+          className="mb-12 relative pl-organic-offset"
+        >
           <h1 className="text-display-lg-mobile md:text-display-lg font-display-lg text-primary mb-4 relative z-10 cursor-default text-balance">
             <WaveHeading text="Technical" levels={[-10, -5]} />{' '}
             <span className="text-secondary">
@@ -125,7 +134,7 @@ export default function SkillsSection() {
             continuous learning and practical application.
           </p>
           <div className="absolute -top-10 -left-4 w-32 h-32 bg-secondary-container rounded-full mix-blend-multiply opacity-50 blur-2xl -z-10" />
-        </header>
+        </motion.header>
 
         <div className="flex justify-end gap-4 mb-6">
           <button
@@ -146,12 +155,16 @@ export default function SkillsSection() {
 
         <div ref={sliderRef} className="slider-container flex gap-8 pb-12 pt-8 px-4 -mx-4">
           {SKILL_CATEGORIES.map((cat, i) => (
-            <div
+            <motion.div
               key={cat.name}
               ref={(el) => {
                 panelRefs.current[i] = el
               }}
               tabIndex={0}
+              initial={{ opacity: 0, y: panelY, scale: panelScale }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, amount: 0.4 }}
+              transition={{ type: 'spring', stiffness: 180, damping: 16 }}
               className="slider-panel wobble-card bg-surface p-6 shadow-[0_8px_32px_rgba(107,56,212,0.1)] h-80 flex flex-col transition-[transform,box-shadow] duration-300 ease-out hover:scale-105 focus:scale-105 hover:-translate-y-2 focus:-translate-y-2 hover:shadow-2xl focus:shadow-2xl hover:z-50 focus:z-50 active:scale-95 cursor-pointer outline-none"
             >
               <div className="flex items-center gap-2 mb-6">
@@ -173,7 +186,7 @@ export default function SkillsSection() {
                   </span>
                 ))}
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>
