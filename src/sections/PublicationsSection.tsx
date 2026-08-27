@@ -34,7 +34,7 @@ export default function PublicationsSection() {
                 <h3 className="text-headline-sm font-headline-sm mb-2 text-on-surface">{pub.title}</h3>
                 <p className="text-body-md font-body-md text-on-surface-variant mb-4 flex-grow">{pub.venue}</p>
                 <a
-                  className="text-primary font-label-bold text-label-bold flex items-center gap-2 hover:text-primary-container transition-colors"
+                  className="text-primary font-label-bold text-label-bold flex items-center gap-2 hover:text-primary-container active:scale-[0.97] transition-[color,transform]"
                   href={pub.link}
                   target="_blank"
                   rel="noreferrer"

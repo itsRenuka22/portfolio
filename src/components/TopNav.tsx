@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion'
 import { SECTIONS } from '../data/sections'
 
 interface TopNavProps {
@@ -24,17 +25,24 @@ export default function TopNav({ activeId, onNavigate }: TopNavProps) {
               <button
                 key={s.id}
                 onClick={() => onNavigate(s.id)}
-                className={`font-body-md text-body-md transition-colors hover:scale-105 transition-transform duration-200 active:scale-95 ${
+                className={`relative pb-1 font-body-md text-body-md transition-[color,transform] duration-200 hover:scale-105 active:scale-95 ${
                   activeId === s.id ? 'text-primary' : 'text-on-surface-variant hover:text-primary'
                 }`}
               >
                 {s.navLabel}
+                {activeId === s.id && (
+                  <motion.span
+                    layoutId="topnav-active-indicator"
+                    className="absolute left-0 right-0 -bottom-0.5 h-0.5 rounded-full bg-primary"
+                    transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+                  />
+                )}
               </button>
             ))}
         </div>
         <button
           onClick={() => onNavigate('contact')}
-          className="bg-primary text-on-primary px-6 py-2 rounded-full font-label-bold text-label-bold btn-pop transition-all"
+          className="bg-primary text-on-primary px-6 py-2 rounded-full font-label-bold text-label-bold btn-pop transition-[transform,box-shadow] active:scale-[0.97]"
         >
           Contact Me
         </button>

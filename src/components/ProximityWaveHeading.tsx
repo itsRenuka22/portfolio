@@ -13,13 +13,24 @@ export default function ProximityWaveHeading({ text, className = '' }: Proximity
     if (!heading || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
     const letters = Array.from(heading.querySelectorAll<HTMLElement>('.wave-letter'))
+    let letterCenters: number[] = []
 
-    const onMouseMove = (e: MouseEvent) => {
-      const mouseX = e.clientX
-      letters.forEach((letter) => {
+    const measure = () => {
+      letterCenters = letters.map((letter) => {
         const rect = letter.getBoundingClientRect()
-        const letterCenterX = rect.left + rect.width / 2
-        const distance = Math.abs(mouseX - letterCenterX)
+        return rect.left + rect.width / 2
+      })
+    }
+    measure()
+
+    let pendingX: number | null = null
+    let rafId = 0
+
+    const applyLift = () => {
+      if (pendingX === null) return
+      const mouseX = pendingX
+      letters.forEach((letter, i) => {
+        const distance = Math.abs(mouseX - letterCenters[i])
         const maxDistance = 150
         const maxLift = -15
 
@@ -33,17 +44,30 @@ export default function ProximityWaveHeading({ text, className = '' }: Proximity
       })
     }
 
+    const onMouseMove = (e: MouseEvent) => {
+      pendingX = e.clientX
+      cancelAnimationFrame(rafId)
+      rafId = requestAnimationFrame(applyLift)
+    }
+
     const onMouseLeave = () => {
+      pendingX = null
+      cancelAnimationFrame(rafId)
       letters.forEach((letter) => {
         letter.style.transform = 'translateY(0px)'
       })
     }
 
+    const onResize = () => measure()
+
     heading.addEventListener('mousemove', onMouseMove)
     heading.addEventListener('mouseleave', onMouseLeave)
+    window.addEventListener('resize', onResize)
     return () => {
       heading.removeEventListener('mousemove', onMouseMove)
       heading.removeEventListener('mouseleave', onMouseLeave)
+      window.removeEventListener('resize', onResize)
+      cancelAnimationFrame(rafId)
     }
   }, [])
 

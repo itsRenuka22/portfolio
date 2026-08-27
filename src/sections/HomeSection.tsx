@@ -1,5 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react'
-import { motion } from 'framer-motion'
+import { motion, useMotionTemplate } from 'framer-motion'
 import WavyText from '../components/WavyText'
 import WaveHeading from '../components/WaveHeading'
 import headshot from '../assets/headshot.jpg'
@@ -33,6 +33,10 @@ export default function HomeSection() {
   const blobBY = useParallaxOffset(progress, 80)
   const textY = useParallaxOffset(progress, 24)
   const photoY = useParallaxOffset(progress, 44)
+  const blobATransform = useMotionTemplate`translateY(${blobAY}px)`
+  const blobBTransform = useMotionTemplate`translateY(${blobBY}px)`
+  const textTransform = useMotionTemplate`translateY(${textY}px)`
+  const photoTransform = useMotionTemplate`translateY(${photoY}px)`
 
   const heroRef = useRef<HTMLElement>(null)
   const setHeroRefs = (el: HTMLElement | null) => {
@@ -76,11 +80,21 @@ export default function HomeSection() {
     raf = requestAnimationFrame(animateBlob)
 
     const heroEl = heroRef.current
+    let glowRafId = 0
+    let pendingGlowX = 0
+    let pendingGlowY = 0
+    const applyGlowPosition = () => {
+      if (glowRef.current) {
+        glowRef.current.style.transform = `translate(${pendingGlowX - 200}px, ${pendingGlowY - 200}px)`
+      }
+    }
     const onHeroMouseMove = (e: MouseEvent) => {
-      if (!heroEl || !glowRef.current) return
+      if (!heroEl) return
       const rect = heroEl.getBoundingClientRect()
-      glowRef.current.style.left = `${e.clientX - rect.left}px`
-      glowRef.current.style.top = `${e.clientY - rect.top}px`
+      pendingGlowX = e.clientX - rect.left
+      pendingGlowY = e.clientY - rect.top
+      cancelAnimationFrame(glowRafId)
+      glowRafId = requestAnimationFrame(applyGlowPosition)
     }
     heroEl?.addEventListener('mousemove', onHeroMouseMove)
 
@@ -88,6 +102,7 @@ export default function HomeSection() {
       document.removeEventListener('mousemove', onMouseMove)
       heroEl?.removeEventListener('mousemove', onHeroMouseMove)
       cancelAnimationFrame(raf)
+      cancelAnimationFrame(glowRafId)
     }
   }, [])
 
@@ -112,6 +127,19 @@ export default function HomeSection() {
     }
 
     let currentLineKey = ''
+    let pendingHighlightRaf = 0
+
+    const applyHighlight = (top: number, left: number, width: number, height: number, isNewLine: boolean) => {
+      highlight.style.opacity = '1'
+      if (isNewLine) {
+        highlight.style.transition = 'none'
+        highlight.style.transform = `translate(${left}px, ${top}px) scaleX(0) scaleY(${height})`
+        // Force reflow so the next transform change animates.
+        void highlight.offsetWidth
+        highlight.style.transition = ''
+      }
+      highlight.style.transform = `translate(${left}px, ${top}px) scaleX(${width}) scaleY(${height})`
+    }
 
     const onMouseMove = (e: MouseEvent) => {
       const caret = getCaretRange(e.clientX, e.clientY)
@@ -164,26 +192,18 @@ export default function HomeSection() {
       const top = lineRect.top - containerRect.top
       const left = lineRect.left - containerRect.left
       const lineKey = `${top}:${left}:${lineRect.width}`
+      const isNewLine = lineKey !== currentLineKey
+      if (isNewLine) currentLineKey = lineKey
 
-      highlight.style.opacity = '1'
-      highlight.style.top = `${top}px`
-      highlight.style.left = `${left}px`
-      highlight.style.width = `${lineRect.width}px`
-      highlight.style.height = `${lineRect.height}px`
-
-      if (lineKey !== currentLineKey) {
-        currentLineKey = lineKey
-        highlight.style.transition = 'none'
-        highlight.style.transform = 'scaleX(0)'
-        // Force reflow so the next transform change animates.
-        void highlight.offsetWidth
-        highlight.style.transition = ''
-        highlight.style.transform = 'scaleX(1)'
-      }
+      cancelAnimationFrame(pendingHighlightRaf)
+      pendingHighlightRaf = requestAnimationFrame(() => {
+        applyHighlight(top, left, lineRect.width, lineRect.height, isNewLine)
+      })
     }
 
     const onMouseLeave = () => {
       currentLineKey = ''
+      cancelAnimationFrame(pendingHighlightRaf)
       highlight.style.opacity = '0'
     }
 
@@ -191,6 +211,7 @@ export default function HomeSection() {
     container.addEventListener('mouseleave', onMouseLeave)
 
     return () => {
+      cancelAnimationFrame(pendingHighlightRaf)
       container.removeEventListener('mousemove', onMouseMove)
       container.removeEventListener('mouseleave', onMouseLeave)
     }
@@ -204,17 +225,17 @@ export default function HomeSection() {
     >
       <motion.div
         className="hero-parallax-blob hero-parallax-blob-a"
-        style={{ y: blobAY }}
+        style={{ transform: blobATransform }}
         aria-hidden="true"
       />
       <motion.div
         className="hero-parallax-blob hero-parallax-blob-b"
-        style={{ y: blobBY }}
+        style={{ transform: blobBTransform }}
         aria-hidden="true"
       />
       <div ref={glowRef} className="hero-glow" />
       <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop w-full grid grid-cols-1 md:grid-cols-12 gap-gutter items-center pt-20">
-        <motion.div className="md:col-span-7 flex flex-col gap-3 z-10 relative" style={{ y: textY }}>
+        <motion.div className="md:col-span-7 flex flex-col gap-3 z-10 relative" style={{ transform: textTransform }}>
           <h1 className="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface cursor-default leading-tight">
             <WavyText text="Renuka Prasad Patwari" className="wavy-text" />
           </h1>
@@ -232,13 +253,13 @@ export default function HomeSection() {
           <div className="flex flex-wrap gap-4 mt-1 relative z-10">
             <button
               onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
-              className="bg-primary text-on-primary px-6 py-2.5 rounded-full font-label-bold text-label-bold btn-pop transition-all"
+              className="bg-primary text-on-primary px-6 py-2.5 rounded-full font-label-bold text-label-bold btn-pop transition-[transform,box-shadow] active:scale-[0.97]"
             >
               View Projects
             </button>
             <button
               onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-              className="bg-surface-container-lowest text-primary border-2 border-primary px-6 py-2.5 rounded-full font-label-bold text-label-bold hover:scale-105 transition-transform duration-200 shadow-violet-hard"
+              className="bg-surface-container-lowest text-primary border-2 border-primary px-6 py-2.5 rounded-full font-label-bold text-label-bold hover:scale-105 active:scale-[0.97] transition-transform duration-200 shadow-violet-hard"
             >
               Get in Touch
             </button>
@@ -276,7 +297,7 @@ export default function HomeSection() {
         <motion.div
           ref={blobContainerRef}
           className="md:col-span-5 relative mt-6 md:mt-0 md:-translate-y-8 flex justify-center md:justify-end"
-          style={{ y: photoY }}
+          style={{ transform: photoTransform }}
         >
           <div
             ref={blobShadowRef}

@@ -54,7 +54,7 @@ export default function ProjectsSection() {
             <button
               key={cat.id}
               onClick={() => setActiveFilter(cat.id)}
-              className={`filter-btn px-6 py-2 rounded-full border-2 border-primary text-primary font-label-bold text-label-bold transition-all duration-200 bg-surface hover:bg-primary-fixed ${
+              className={`filter-btn px-6 py-2 rounded-full border-2 border-primary text-primary font-label-bold text-label-bold transition-[background-color,box-shadow,transform] duration-200 bg-surface hover:bg-primary-fixed ${
                 activeFilter === cat.id ? 'active' : ''
               }`}
             >
@@ -123,7 +123,7 @@ export default function ProjectsSection() {
                   <div className="flex gap-4 mt-auto">
                     {project.github && (
                       <a
-                        className="text-primary font-label-bold text-label-bold flex items-center gap-1 hover:text-primary-container transition-colors"
+                        className="text-primary font-label-bold text-label-bold flex items-center gap-1 hover:text-primary-container active:scale-[0.97] transition-[color,transform]"
                         href={project.github}
                         target="_blank"
                         rel="noreferrer"
@@ -133,7 +133,7 @@ export default function ProjectsSection() {
                     )}
                     {project.liveUrl && (
                       <a
-                        className="text-secondary font-label-bold text-label-bold flex items-center gap-1 hover:text-on-secondary-container transition-colors"
+                        className="text-secondary font-label-bold text-label-bold flex items-center gap-1 hover:text-on-secondary-container active:scale-[0.97] transition-[color,transform]"
                         href={project.liveUrl}
                         target="_blank"
                         rel="noreferrer"

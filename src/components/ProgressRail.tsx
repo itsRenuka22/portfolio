@@ -18,8 +18,8 @@ export default function ProgressRail({ activeId, onNavigate }: ProgressRailProps
             className="group relative flex items-center justify-center"
           >
             <span
-              className={`block rounded-full transition-all duration-300 ${
-                isActive ? 'w-3 h-3 bg-primary' : 'w-2 h-2 bg-outline-variant group-hover:bg-primary/60'
+              className={`block w-2 h-2 rounded-full transition-[transform,background-color] duration-300 ${
+                isActive ? 'scale-150 bg-primary' : 'bg-outline-variant group-hover:bg-primary/60'
               }`}
             />
             <span className="pointer-events-none absolute right-full mr-3 whitespace-nowrap rounded-md bg-on-surface text-inverse-on-surface px-2 py-1 font-label-sm text-label-sm opacity-0 group-hover:opacity-100 transition-opacity">

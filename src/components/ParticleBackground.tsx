@@ -42,14 +42,12 @@ export default function ParticleBackground() {
         ctx.globalAlpha = 0.35
         ctx.fill()
       }
-      raf = requestAnimationFrame(draw)
+      if (!reduceMotion) {
+        raf = requestAnimationFrame(draw)
+      }
     }
 
-    if (!reduceMotion) {
-      raf = requestAnimationFrame(draw)
-    } else {
-      draw()
-    }
+    draw()
 
     const onResize = () => {
       width = canvas.width = canvas.offsetWidth

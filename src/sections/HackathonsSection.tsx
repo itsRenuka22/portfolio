@@ -30,6 +30,11 @@ function HackathonTile({
   const reduceMotion = useReducedMotion()
   const bgOffset = reduceMotion ? 0 : PARALLAX_OFFSETS[index % PARALLAX_OFFSETS.length]
 
+  const handleOpen = () => {
+    if (entry.confetti) onHoverStart()
+    onOpen()
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -41,9 +46,8 @@ function HackathonTile({
       <button
         ref={cardRef as never}
         type="button"
-        onMouseEnter={entry.confetti ? onHoverStart : undefined}
-        onClick={onOpen}
-        className="group relative flex h-full min-h-[220px] w-full flex-col overflow-hidden rounded-xl border border-surface-variant bg-surface-container-lowest text-left shadow-sm grayscale transition-all duration-400 ease-out hover:-translate-y-1 hover:scale-[1.02] hover:grayscale-0 hover:shadow-2xl hover:z-10"
+        onClick={handleOpen}
+        className="group relative flex h-full min-h-[220px] w-full flex-col overflow-hidden rounded-xl border border-surface-variant bg-surface-container-lowest text-left shadow-sm grayscale transition-[transform,filter,box-shadow] duration-[250ms] ease-out hover:-translate-y-1 hover:scale-[1.02] hover:grayscale-0 hover:shadow-2xl hover:z-10"
       >
         {entry.image ? (
           <motion.div
@@ -134,7 +138,7 @@ function HackathonModal({ entry, onClose }: { entry: HackathonEntry; onClose: ()
           <button
             type="button"
             onClick={onClose}
-            className="group rounded-full p-2 text-on-surface-variant transition-colors hover:bg-surface-variant"
+            className="group rounded-full p-2 text-on-surface-variant active:scale-90 transition-[color,background-color,transform] hover:bg-surface-variant"
             aria-label="Close"
           >
             <span className="material-symbols-outlined transition-transform group-hover:scale-110">

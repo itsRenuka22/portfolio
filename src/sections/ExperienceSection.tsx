@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { motion, useMotionTemplate } from 'framer-motion'
 import WaveHeading from '../components/WaveHeading'
 import { EXPERIENCE, type ExperienceEntry } from '../data/experience'
 import { useSectionParallax, useParallaxOffset } from '../hooks/useSectionParallax'
@@ -7,19 +7,21 @@ function ExperienceRow({ job }: { job: ExperienceEntry }) {
   const { sectionRef, progress } = useSectionParallax<HTMLDivElement>()
   const dotY = useParallaxOffset(progress, 10)
   const contentY = useParallaxOffset(progress, 22)
+  const dotTransform = useMotionTemplate`translateY(${dotY}px)`
+  const contentTransform = useMotionTemplate`translateY(${contentY}px)`
 
   return (
     <div ref={sectionRef} className="relative z-10 flex flex-col md:flex-row gap-8 md:gap-16">
       <div className="hidden md:flex flex-col items-center shrink-0 w-16">
         <motion.div
-          style={{ y: dotY }}
+          style={{ transform: dotTransform }}
           className={`w-4 h-4 rounded-full mt-2 ${
             job.accentClass === 'primary' ? 'bg-primary ring-4 ring-primary-fixed' : 'bg-outline-variant'
           }`}
         />
       </div>
 
-      <motion.div className="flex-1" style={{ y: contentY }}>
+      <motion.div className="flex-1" style={{ transform: contentTransform }}>
         <div
           className={`bg-surface rounded-[24px_8px_32px_12px] p-6 md:p-10 experience-card relative overflow-hidden group ${
             job.accentClass === 'primary' ? 'ambient-shadow-primary' : 'ambient-shadow-secondary'

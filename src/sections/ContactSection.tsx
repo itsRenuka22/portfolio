@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { motion, useMotionTemplate } from 'framer-motion'
 import ParticleBackground from '../components/ParticleBackground'
 import { useSectionParallax, useParallaxOffset } from '../hooks/useSectionParallax'
 
@@ -35,6 +35,8 @@ export default function ContactSection() {
   const { sectionRef, progress } = useSectionParallax<HTMLElement>()
   const bgY = useParallaxOffset(progress, 30)
   const cardY = useParallaxOffset(progress, 12)
+  const bgTransform = useMotionTemplate`translateY(${bgY}px)`
+  const cardTransform = useMotionTemplate`translateY(${cardY}px)`
 
   return (
     <section
@@ -42,11 +44,11 @@ export default function ContactSection() {
       ref={sectionRef}
       className="snap-start snap-always h-screen w-full flex items-center relative overflow-y-auto"
     >
-      <motion.div className="contact-parallax-bg animated-gradient-bg absolute inset-0" style={{ y: bgY }}>
+      <motion.div className="contact-parallax-bg animated-gradient-bg absolute inset-0" style={{ transform: bgTransform }}>
         <ParticleBackground />
       </motion.div>
       <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop w-full relative z-10">
-        <motion.div className="relative" style={{ y: cardY }}>
+        <motion.div className="relative" style={{ transform: cardTransform }}>
           <div className="absolute inset-0 bg-surface-container-low rounded-[40px] transform rotate-1 -z-10" />
           <motion.div
             className="bg-surface-container-lowest p-8 md:p-16 rounded-[32px] shadow-vk-base hover:shadow-vk-active transition-shadow duration-300"
@@ -65,7 +67,7 @@ export default function ContactSection() {
                     key={detail.label}
                     variants={itemVariants}
                     href={detail.href}
-                    className="flex items-center gap-4 group cursor-pointer"
+                    className="flex items-center gap-4 group cursor-pointer active:opacity-70 transition-opacity"
                   >
                     <div
                       className={`w-12 h-12 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform ${detail.bg}`}
@@ -90,7 +92,7 @@ export default function ContactSection() {
                   <motion.a
                     key={social.label}
                     variants={itemVariants}
-                    className={`wobble-box bg-surface-container-high p-4 flex items-center justify-between transition-colors duration-300 ${social.hoverBg}`}
+                    className={`wobble-box bg-surface-container-high p-4 flex items-center justify-between active:opacity-70 transition-[color,opacity] duration-300 ${social.hoverBg}`}
                     href={social.href}
                     target="_blank"
                     rel="noreferrer"
