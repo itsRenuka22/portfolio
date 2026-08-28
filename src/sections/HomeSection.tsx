@@ -241,7 +241,8 @@ export default function HomeSection() {
         <motion.div className="md:col-span-7 flex flex-col gap-3 z-10 relative" style={{ transform: textTransform }}>
           <motion.h1
             initial={{ opacity: 0, y: heroY }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.5 }}
             transition={heroTransition(0)}
             className="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface cursor-default leading-tight text-balance"
           >
@@ -249,7 +250,8 @@ export default function HomeSection() {
           </motion.h1>
           <motion.h2
             initial={{ opacity: 0, y: heroY }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.5 }}
             transition={heroTransition(0.1)}
             className="font-headline-md text-headline-md text-primary relative z-10 cursor-default text-balance"
           >
@@ -258,7 +260,8 @@ export default function HomeSection() {
           <motion.div
             ref={aboutRef}
             initial={{ opacity: 0, y: heroY }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.5 }}
             transition={heroTransition(0.2)}
             className="cursor-default flex flex-col gap-1.5 relative z-10 max-w-2xl"
           >
@@ -271,7 +274,8 @@ export default function HomeSection() {
           </motion.div>
           <motion.div
             initial={{ opacity: 0, y: heroY }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.5 }}
             transition={heroTransition(0.3)}
             className="flex flex-wrap gap-4 mt-1 relative z-10"
           >
@@ -291,7 +295,8 @@ export default function HomeSection() {
 
           <motion.div
             initial={{ opacity: 0, y: heroY }}
-            animate={{ opacity: 1, y: 0 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.5 }}
             transition={heroTransition(0.4)}
             className="mt-5 pt-5 border-t-2 border-secondary-container/30 relative z-10"
           >
@@ -326,7 +331,8 @@ export default function HomeSection() {
         <motion.div
           ref={blobContainerRef}
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: false, amount: 0.4 }}
           transition={{ duration: 0.7, delay: 0.15 }}
           className="md:col-span-5 relative mt-6 md:mt-0 md:-translate-y-8 flex justify-center md:justify-end"
           style={{ transform: photoTransform }}

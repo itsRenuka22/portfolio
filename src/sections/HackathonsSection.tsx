@@ -41,7 +41,7 @@ function HackathonTile({
     <motion.div
       initial={{ opacity: 0, y: tileY, scale: tileScale }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: false, amount: 0.2 }}
       transition={{ type: 'spring', stiffness: 180, damping: 17, delay: index * 0.1 }}
       className={`${SIZE_CLASSES[entry.size]} relative`}
     >
@@ -56,7 +56,7 @@ function HackathonTile({
             className="hackathon-parallax-bg"
             initial={{ y: bgOffset }}
             whileInView={{ y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
+            viewport={{ once: false, amount: 0.2 }}
             transition={{ duration: 0.9, delay: index * 0.08 + 0.1, ease: [0.16, 1, 0.3, 1] }}
           >
             <img
@@ -215,7 +215,7 @@ export default function HackathonsSection() {
         <motion.div
           initial={{ opacity: 0, y: reduceMotion ? 0 : 70 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
+          viewport={{ once: false, amount: 0.3 }}
           transition={{ type: 'spring', stiffness: 140, damping: 16 }}
           className="mb-16 max-w-3xl relative"
         >

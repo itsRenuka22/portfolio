@@ -42,7 +42,7 @@ export default function ProjectsSection() {
         <motion.div
           initial={{ opacity: 0, y: reduceMotion ? 0 : 70 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
+          viewport={{ once: false, amount: 0.3 }}
           transition={{ type: 'spring', stiffness: 140, damping: 16 }}
           className="mb-16 relative"
         >
@@ -83,7 +83,7 @@ export default function ProjectsSection() {
                   scale: 1,
                   transition: { type: 'spring', stiffness: 200, damping: 18, delay: idx * 0.06 },
                 }}
-                viewport={{ once: true, amount: 0.2 }}
+                viewport={{ once: false, amount: 0.2 }}
                 exit={{ opacity: 0, scale: cardScale, transition: { duration: 0.2, ease: [0.16, 1, 0.3, 1] } }}
                 className="relative z-10"
               >

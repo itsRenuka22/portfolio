@@ -55,7 +55,7 @@ export default function ContactSection() {
             variants={containerVariants}
             initial="hidden"
             whileInView="show"
-            viewport={{ once: true, amount: 0.3 }}
+            viewport={{ once: false, amount: 0.3 }}
           >
             <motion.h2 variants={itemVariants} className="text-headline-md font-headline-md text-on-surface mb-8">
               Let's Connect

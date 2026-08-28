@@ -16,7 +16,7 @@ export default function PublicationsSection() {
         <motion.h1
           initial={{ opacity: 0, y: reduceMotion ? 0 : 70 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
+          viewport={{ once: false, amount: 0.3 }}
           transition={{ type: 'spring', stiffness: 140, damping: 16 }}
           className="text-display-lg-mobile md:text-display-lg font-display-lg text-primary mb-16 relative inline-block cursor-default text-balance"
         >
@@ -31,7 +31,7 @@ export default function PublicationsSection() {
               className="pub-card-wrapper"
               initial={{ opacity: 0, y: cardY, scale: cardScale }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: true, amount: 0.2 }}
+              viewport={{ once: false, amount: 0.2 }}
               transition={{ type: 'spring', stiffness: 180, damping: 17, delay: i * 0.1 }}
             >
               <div className="pub-card bg-surface-container-lowest p-6 rounded-xl border-b-4 border-secondary shadow-vk-base h-full flex flex-col">

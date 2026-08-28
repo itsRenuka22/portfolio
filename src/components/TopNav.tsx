@@ -10,7 +10,7 @@ export default function TopNav({ activeId, onNavigate }: TopNavProps) {
   const navLinks = SECTIONS.filter((s) => s.id !== 'home')
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md shadow-[8px_8px_0px_0px_rgba(107,56,212,0.1)]">
+    <nav className="glass-surface fixed top-0 left-0 right-0 z-50 shadow-[8px_8px_0px_0px_rgba(107,56,212,0.1)]">
       <div className="flex justify-between items-center max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-4">
         <button
           className="font-headline-sm text-headline-sm text-primary tracking-tighter"

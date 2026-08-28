@@ -7,7 +7,7 @@ interface ProgressRailProps {
 
 export default function ProgressRail({ activeId, onNavigate }: ProgressRailProps) {
   return (
-    <div className="fixed right-4 md:right-6 top-1/2 -translate-y-1/2 z-40 hidden sm:flex flex-col items-center gap-4">
+    <div className="glass-surface fixed right-4 md:right-6 top-1/2 -translate-y-1/2 z-40 hidden sm:flex flex-col items-center gap-4 rounded-full px-2.5 py-4">
       {SECTIONS.map((s) => {
         const isActive = s.id === activeId
         return (

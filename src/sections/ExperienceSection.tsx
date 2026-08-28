@@ -18,7 +18,7 @@ function ExperienceRow({ job, index }: { job: ExperienceEntry; index: number }) 
       ref={sectionRef}
       initial={{ opacity: 0, y: rowY, scale: rowScale }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, amount: 0.3 }}
+      viewport={{ once: false, amount: 0.3 }}
       transition={{ type: 'spring', stiffness: 160, damping: 17, delay: index * 0.12 }}
       className="relative z-10 flex flex-col md:flex-row gap-8 md:gap-16"
     >
@@ -102,7 +102,7 @@ export default function ExperienceSection() {
           className="mb-16 md:mb-20 relative z-10"
           initial={{ opacity: 0, y: headerY }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
+          viewport={{ once: false, amount: 0.3 }}
           transition={{ type: 'spring', stiffness: 140, damping: 16 }}
         >
           <div className="inline-block mb-6 bg-secondary-container text-on-secondary-container px-4 py-2 rounded-xl organic-shape-1 font-label-bold text-label-bold">

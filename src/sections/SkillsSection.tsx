@@ -119,7 +119,7 @@ export default function SkillsSection() {
         <motion.header
           initial={{ opacity: 0, y: reduceMotion ? 0 : 70 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.3 }}
+          viewport={{ once: false, amount: 0.3 }}
           transition={{ type: 'spring', stiffness: 140, damping: 16 }}
           className="mb-12 relative pl-organic-offset"
         >
@@ -163,7 +163,7 @@ export default function SkillsSection() {
               tabIndex={0}
               initial={{ opacity: 0, y: panelY, scale: panelScale }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
-              viewport={{ once: true, amount: 0.4 }}
+              viewport={{ once: false, amount: 0.4 }}
               transition={{ type: 'spring', stiffness: 180, damping: 16 }}
               className="slider-panel wobble-card bg-surface p-6 shadow-[0_8px_32px_rgba(107,56,212,0.1)] h-80 flex flex-col transition-[transform,box-shadow] duration-300 ease-out hover:scale-105 focus:scale-105 hover:-translate-y-2 focus:-translate-y-2 hover:shadow-2xl focus:shadow-2xl hover:z-50 focus:z-50 active:scale-95 cursor-pointer outline-none"
             >
