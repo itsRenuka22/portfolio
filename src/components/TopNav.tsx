@@ -7,7 +7,7 @@ interface TopNavProps {
 }
 
 export default function TopNav({ activeId, onNavigate }: TopNavProps) {
-  const navLinks = SECTIONS.filter((s) => s.id !== 'home')
+  const navLinks = SECTIONS
 
   return (
     <nav className="glass-surface fixed top-0 left-0 right-0 z-50 shadow-[8px_8px_0px_0px_rgba(107,56,212,0.1)]">

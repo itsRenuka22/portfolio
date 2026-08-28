@@ -130,8 +130,8 @@ export default function SkillsSection() {
             </span>
           </h1>
           <p className="text-body-lg font-body-lg text-on-surface-variant max-w-2xl text-pretty">
-            A curated collection of tools, languages, and frameworks — building momentum through
-            continuous learning and practical application.
+            Languages, frameworks, and tools I've used across coursework, work experience, and
+            projects.
           </p>
           <div className="absolute -top-10 -left-4 w-32 h-32 bg-secondary-container rounded-full mix-blend-multiply opacity-50 blur-2xl -z-10" />
         </motion.header>

@@ -8,9 +8,9 @@ const CONTACT_DETAILS = [
   {
     icon: 'mail',
     label: 'Email',
-    value: 'renukaprasad.patwari@sjsu.edu',
+    value: 'patwarirenuka22@gmail.com',
     bg: 'bg-primary-container text-on-primary-container',
-    href: 'mailto:renukaprasad.patwari@sjsu.edu',
+    href: 'mailto:patwarirenuka22@gmail.com',
   },
 ]
 

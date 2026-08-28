@@ -231,8 +231,7 @@ export default function HackathonsSection() {
             </span>
           </h1>
           <p className="text-body-lg font-body-lg text-on-surface-variant max-w-2xl text-pretty">
-            Hackathons are my sandbox — where sleep deprivation meets rapid prototyping, and ideas turn
-            into working software in a weekend.
+            Six hackathons and one AI camp, spread across this year.
           </p>
         </motion.div>
 

@@ -3,6 +3,8 @@ import { motion, useMotionTemplate, useReducedMotion } from 'framer-motion'
 import WavyText from '../components/WavyText'
 import WaveHeading from '../components/WaveHeading'
 import headshot from '../assets/headshot.jpg'
+
+const RESUME_URL = `${import.meta.env.BASE_URL}resume/RenukaPrasadPatwari_Resume.pdf`
 import { useSectionParallax, useParallaxOffset } from '../hooks/useSectionParallax'
 
 const EDUCATION = [
@@ -10,7 +12,7 @@ const EDUCATION = [
     degree: 'MS Software Engineering',
     school: 'San Jose State University',
     dates: 'Aug 2025 – May 2027',
-    detail: 'CGPA 3.62/4.0',
+    detail: 'CGPA 3.67/4.0',
   },
   {
     degree: 'BE Computer Engineering',
@@ -285,12 +287,13 @@ export default function HomeSection() {
             >
               View Projects
             </button>
-            <button
-              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+            <a
+              href={RESUME_URL}
+              download="RenukaPrasadPatwari_Resume.pdf"
               className="bg-surface-container-lowest text-primary border-2 border-primary px-6 py-2.5 rounded-full font-label-bold text-label-bold hover:scale-105 active:scale-[0.97] transition-transform duration-200 shadow-violet-hard"
             >
-              Get in Touch
-            </button>
+              Resume
+            </a>
           </motion.div>
 
           <motion.div
