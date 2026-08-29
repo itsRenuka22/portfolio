@@ -226,7 +226,7 @@ export default function HomeSection() {
     <section
       id="home"
       ref={setHeroRefs}
-      className="hero-section snap-start snap-always h-screen w-full flex items-center overflow-y-auto"
+      className="hero-section snap-start snap-always min-h-dvh w-full flex items-center overflow-y-auto py-6"
     >
       <motion.div
         className="hero-parallax-blob hero-parallax-blob-a"

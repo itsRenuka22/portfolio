@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { Fragment, useRef } from 'react'
 
 interface WaveHeadingProps {
   text: string
@@ -30,19 +30,40 @@ export default function WaveHeading({ text, className = '', levels = DEFAULT_LEV
     })
   }
 
+  // Letters are indexed continuously across the whole string (spaces consume an
+  // index slot too) so the hover falloff distance matches the original flat
+  // per-character layout. Each word's letters are grouped in their own
+  // `whitespace-nowrap` box so the browser can only wrap at real word
+  // boundaries, not between individual letter spans.
+  const words = text.split(' ')
+  let nextIndex = 0
+
   return (
     <span ref={wrapperRef} className={className}>
-      {text.split('').map((char, i) => (
-        <span
-          key={i}
-          data-index={i}
-          className="inline-block transition-transform duration-200 ease-out"
-          onMouseEnter={() => handleEnter(i)}
-          onMouseLeave={handleLeave}
-        >
-          {char === ' ' ? ' ' : char}
-        </span>
-      ))}
+      {words.map((word, wi) => {
+        const isLastWord = wi === words.length - 1
+        const letters = word.split('').map((char, i) => {
+          const index = nextIndex++
+          return (
+            <span
+              key={i}
+              data-index={index}
+              className="inline-block transition-transform duration-200 ease-out"
+              onMouseEnter={() => handleEnter(index)}
+              onMouseLeave={handleLeave}
+            >
+              {char}
+            </span>
+          )
+        })
+        if (!isLastWord) nextIndex++ // reserve the space's index slot
+        return (
+          <Fragment key={wi}>
+            <span className="inline-block whitespace-nowrap">{letters}</span>
+            {!isLastWord ? ' ' : null}
+          </Fragment>
+        )
+      })}
     </span>
   )
 }

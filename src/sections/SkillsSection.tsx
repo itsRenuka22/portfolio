@@ -110,7 +110,7 @@ export default function SkillsSection() {
     <section
       id="skills"
       ref={sectionRef}
-      className="snap-start snap-always h-screen w-full flex items-start relative overflow-y-auto pt-28 pb-16"
+      className="snap-start snap-always min-h-dvh w-full flex items-start relative overflow-y-auto pt-28 pb-16"
     >
       <motion.div className="absolute inset-0 overflow-hidden" style={{ transform: textureTransform }} aria-hidden="true">
         <div ref={textureRef} className="skills-parallax-texture" />

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { Fragment, useEffect, useRef } from 'react'
 
 interface ProximityWaveHeadingProps {
   text: string
@@ -71,12 +71,23 @@ export default function ProximityWaveHeading({ text, className = '' }: Proximity
     }
   }, [])
 
+  // Each word's letters are grouped in a `whitespace-nowrap` box so the browser
+  // can only wrap at real word boundaries, not between individual letter spans.
+  const words = text.split(' ')
+
   return (
     <h1 ref={headingRef} className={className}>
-      {text.split('').map((char, i) => (
-        <span key={i} className="wave-letter">
-          {char === ' ' ? ' ' : char}
-        </span>
+      {words.map((word, wi) => (
+        <Fragment key={wi}>
+          <span className="inline-block whitespace-nowrap">
+            {word.split('').map((char, i) => (
+              <span key={i} className="wave-letter">
+                {char}
+              </span>
+            ))}
+          </span>
+          {wi < words.length - 1 ? <span className="wave-letter">&nbsp;</span> : null}
+        </Fragment>
       ))}
     </h1>
   )

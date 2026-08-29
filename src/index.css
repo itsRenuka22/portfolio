@@ -240,9 +240,22 @@ body {
 }
 
 .slider-panel {
-  min-width: 320px;
-  max-width: 400px;
+  /* flex-shrink:0 keeps each panel at its intended width instead of the flex
+     layout squeezing every panel down to fit the visible track — that's what
+     the horizontal scroll is for. Full width on mobile so the card's edges
+     line up with the heading/paragraph above it instead of leaving an
+     unbalanced gap on one side; the peek-of-the-next-card look only kicks in
+     once there's room for it at sm:. */
+  flex: 0 0 100%;
   scroll-snap-align: start;
+}
+
+@media (min-width: 640px) {
+  .slider-panel {
+    flex: 0 0 auto;
+    min-width: 320px;
+    max-width: 400px;
+  }
 }
 
 /* ---------- Hackathons section ---------- */

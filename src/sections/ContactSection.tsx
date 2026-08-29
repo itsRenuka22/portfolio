@@ -42,7 +42,7 @@ export default function ContactSection() {
     <section
       id="contact"
       ref={sectionRef}
-      className="snap-start snap-always h-screen w-full flex items-center relative overflow-y-auto"
+      className="snap-start snap-always min-h-dvh w-full flex items-center relative overflow-y-auto py-20"
     >
       <motion.div className="contact-parallax-bg animated-gradient-bg absolute inset-0" style={{ transform: bgTransform }}>
         <ParticleBackground />

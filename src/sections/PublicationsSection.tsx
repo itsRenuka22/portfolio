@@ -10,7 +10,7 @@ export default function PublicationsSection() {
   return (
     <section
       id="publications"
-      className="snap-start snap-always h-screen w-full flex items-start relative overflow-y-auto pt-28 pb-16"
+      className="snap-start snap-always min-h-dvh w-full flex items-start relative overflow-y-auto pt-28 pb-16"
     >
       <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop w-full">
         <motion.h1
